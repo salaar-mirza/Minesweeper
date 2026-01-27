@@ -1,0 +1,35 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "Build SFML Game",
+            "command": "g++",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${workspaceFolder}/Array-Minesweeper/*.cpp",
+                "-I${workspaceFolder}/Array-Minesweeper/SFML/include",
+                "-L${workspaceFolder}/Array-Minesweeper/SFML/lib",
+                "-lsfml-graphics",
+                "-lsfml-window",
+                "-lsfml-system",
+                "-lsfml-audio",
+                "-lsfml-network",
+                "-o",
+                "${workspaceFolder}/Array-Minesweeper/Minesweeper.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/Array-Minesweeper"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Compiles the game and links SFML"
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run SFML Game",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Array-Minesweeper/Minesweeper.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/Array-Minesweeper",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "${workspaceFolder}/Array-Minesweeper/SFML/bin;${env:PATH}"
+                }
+            ],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "preLaunchTask": "Build SFML Game"
+        }
+    ]
+}
