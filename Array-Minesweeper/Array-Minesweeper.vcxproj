@@ -133,8 +133,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\Sound\SoundManager.cpp" />
     <ClCompile Include="source\GameLoop\GameLoop.cpp" />
+    <ClCompile Include="source\Sound\SoundManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="source\Event\EventPollingManager.cpp" />
     <ClCompile Include="source\GameWindow\GameWindowManager.cpp" />

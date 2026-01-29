@@ -1,11 +1,22 @@
 #pragma once
-#include "../../header/GameWindow/GameWindowManager.h"
-#include "../../header/Event/EventPollingManager.h"
-#include "../../header/UI/SplashScreen/SplashScreenManager.h"
 
-using namespace GameWindow;
-using namespace Event;
-using namespace UI;
+//Forward Declarations since we used Pointer Types.
+namespace sf
+{
+    class RenderWindow;
+}
+namespace  GameWindow
+{
+    class GameWindowManager;
+}
+namespace Event
+{
+    class EventPollingManager;
+}
+namespace UI
+{
+    class SplashScreenManager;
+}
 
 enum class GameState
 {
@@ -17,11 +28,11 @@ enum class GameState
 
 class GameLoop {
 private:
-    GameWindowManager* window_manager;
-    EventPollingManager* event_manager;
+    GameWindow::GameWindowManager* window_manager;
+    Event::EventPollingManager* event_manager;
 
     sf::RenderWindow* game_window;
-    SplashScreenManager* splash_screen_manager;
+    UI::SplashScreenManager* splash_screen_manager;
 
     static GameState current_state;
 
