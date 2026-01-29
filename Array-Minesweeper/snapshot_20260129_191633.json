@@ -1,0 +1,28 @@
+{
+  "performance": {
+    "hotspots": [
+
+    ]
+  },
+  "deadCode": {
+    "dead_functions": [
+
+    ]
+  },
+  "sqlAnalysis": {
+    "totalQueries": 0,
+    "nPlus1Issues": 0,
+    "issues": [],
+    "queries": []
+  },
+  "diagram": {
+    "type": "PlantUML",
+    "content": "sequenceDiagram\n    Note over System: No trace data available yet.\n    Note over System: Start a traced Python process to see the diagram.\n    Note over System: Use 'Show Dead Call Trees' checkbox to include AST-based dead code."
+  },
+  "metadata": {
+    "timestamp": "2026-01-29T13:46:33.311392800Z",
+    "totalCalls": 0,
+    "deadCodeCount": 0,
+    "source": "pycharm"
+  }
+}
