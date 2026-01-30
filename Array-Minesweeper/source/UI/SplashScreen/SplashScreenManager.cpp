@@ -17,7 +17,7 @@ namespace UI
     void SplashScreenManager::initialize()
     {
         if (!logo_texture.loadFromFile(logo_texture_path))
-            std::cerr << "Failed to load logo texture" << std::endl;
+            std::cerr << "Failed to load logo texture\n";
 
         logo_sprite.setTexture(logo_texture);
         logo_sprite.setPosition(getLogoPosition());
@@ -43,7 +43,7 @@ namespace UI
         else
         {
             elapsed_time = 0.0f;
-            /*GameLoop::setGameState(GameState::GAMEPLAY);*/
+            GameLoop::setGameState(GameState::GAMEPLAY);
         }
     }
 }
