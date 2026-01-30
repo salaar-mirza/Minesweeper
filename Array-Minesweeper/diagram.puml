@@ -1,0 +1,155 @@
+@startuml
+
+package GameWindow {
+    class GameWindowManager {
+        - int frame_rate
+        - string game_window_title
+        - int game_window_width
+        - int game_window_height
+        - sf::RenderWindow* game_window
+        - sf::VideoMode video_mode
+        - sf::Color window_color
+        - void initialize()
+        - sf::RenderWindow* createGameWindow()
+        - void setFrameRate(int)
+        - void configureVideoMode()
+        - void onDestroy()
+        + GameWindowManager()
+        + ~GameWindowManager()
+        + bool isGameWindowOpen()
+        + sf::RenderWindow* getGameWindow()
+        + void update()
+        + void render()
+    }
+}
+
+package Event {
+    enum MouseButtonState {
+        PRESSED
+        HELD
+        RELEASED
+    }
+
+    class EventPollingManager {
+        - sf::Event game_event
+        - sf::RenderWindow* game_window
+        - MouseButtonState left_mouse_button_state
+        - MouseButtonState right_mouse_button_state
+        - void initializeVariables(sf::RenderWindow*)
+        - void updateMouseButtonState(MouseButtonState&, sf::Mouse::Button)
+        - bool hasQuitGame()
+        - bool isKeyboardEvent()
+        - bool isGameWindowOpen()
+        - bool gameWindowWasClosed()
+        + EventPollingManager(sf::RenderWindow*)
+        + ~EventPollingManager()
+        + void processEvents()
+        + void update()
+        + bool pressedEscapeKey()
+        + bool pressedLeftMouseButton()
+        + bool pressedRightMouseButton()
+        + sf::Vector2i getMousePosition()
+    }
+    EventPollingManager ..> MouseButtonState
+}
+
+package UI {
+    class SplashScreenManager {
+        - sf::RenderWindow* game_window
+        - sf::Texture logo_texture
+        - sf::Sprite logo_sprite
+        - float logo_width
+        - float logo_height
+        - float logo_animation_duration
+        - string logo_texture_path
+        - float elapsed_time
+        - void initialize()
+        - sf::Vector2f getLogoPosition()
+        - void drawLogo()
+        + SplashScreenManager(sf::RenderWindow*)
+        + ~SplashScreenManager()
+        + void update()
+        + void render()
+    }
+}
+
+package Gameplay {
+    class Board {
+        - float boardWidth
+        - float boardHeight
+        - float boardPosition
+        - string boardTexturePath
+        - sf::Texture boardTexture
+        - sf::Sprite boardSprite
+        - void initializeBoardImage()
+        - void initialize()
+        + Board()
+        + void render(sf::RenderWindow&)
+    }
+
+    class GameplayManager {
+        - Board* board
+        - float background_alpha
+        - sf::Texture background_texture
+        - sf::Sprite background_sprite
+        - string background_texture_path
+        - void initialize()
+        - void initializeVariables()
+        - void initializeBackground()
+        + GameplayManager()
+        + ~GameplayManager()
+        + void render(sf::RenderWindow&)
+    }
+    GameplayManager *-- Board
+}
+
+package Sound {
+    enum SoundType {
+        BUTTON_CLICK
+        FLAG
+        EXPLOSION
+        GAME_WON
+    }
+
+    class SoundManager {
+        + {static} void Initialize()
+        + {static} void PlaySound(SoundType)
+        + {static} void PlayBackgroundMusic()
+    }
+    SoundManager ..> SoundType
+}
+
+class TimeManager {
+    + {static} void initialize()
+    + {static} void update()
+}
+
+class GameLoop {
+    - GameWindow::GameWindowManager* window_manager
+    - Event::EventPollingManager* event_manager
+    - sf::RenderWindow* game_window
+    - UI::SplashScreenManager* splash_screen_manager
+    - Gameplay::GameplayManager* gameplay_manager
+    - {static} GameState current_state
+    + GameLoop()
+    + ~GameLoop()
+    + void run()
+    + {static} void setGameState(GameState)
+}
+
+enum GameState {
+    SPLASH_SCREEN
+    MAIN_MENU
+    GAMEPLAY
+    EXIT
+}
+
+GameLoop *-- GameWindow.GameWindowManager : Composes
+GameLoop *-- Event.EventPollingManager : Composes
+GameLoop *-- UI.SplashScreenManager : Composes
+GameLoop *-- Gameplay.GameplayManager : Composes
+GameLoop ..> Sound.SoundManager : Uses
+GameLoop ..> TimeManager : Uses
+GameLoop ..> GameState : Uses
+
+@enduml

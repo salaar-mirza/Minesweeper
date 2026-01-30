@@ -34,3 +34,85 @@
 # Others
 *.vs/
 *x64/
+
+
+
+# JetBrains IDEs (CLion, Rider, etc.)
+.idea/
+*.iml
+cmake-build-*/
+
+# Visual Studio Code
+.vscode/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.vcxproj.filters
+*.vcxproj.user
+/x64/
+/x86/
+/Win32/
+/ARM/
+/ARM64/
+/ipch/
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.sln.docstates
+
+# Build artifacts
+build/
+bin/
+lib/
+/out/
+
+# Compiled files
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+*.pdb
+*.ilk
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cbp
+
+# Operating System generated files
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+*~
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Log and temporary files
+*.log
+*.tmp
+*.swp
+
+
+# Allow SFML libraries and binaries
+!Array-Minesweeper/SFML/lib/
+!Array-Minesweeper/SFML/bin/
+!Array-Minesweeper/SFML/**/*.lib
+!Array-Minesweeper/SFML/**/*.dll
+
