@@ -18,6 +18,12 @@ namespace UI
     class SplashScreenManager;
 }
 
+namespace Gameplay
+{
+    class GameplayManager;
+    
+}
+
 enum class GameState
 {
     SPLASH_SCREEN,
@@ -33,6 +39,8 @@ private:
 
     sf::RenderWindow* game_window;
     UI::SplashScreenManager* splash_screen_manager;
+    Gameplay::GameplayManager* gameplay_manager;
+
 
     static GameState current_state;
 

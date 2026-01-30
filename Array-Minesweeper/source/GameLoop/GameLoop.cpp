@@ -5,6 +5,7 @@
 #include "../../header/Sound/SoundManager.h"
 #include "../../header/Time/TimeManager.h"
 #include "../../header/UI/SplashScreen/SplashScreenManager.h"
+#include  "../../header/GameLoop/GamePlay/GameplayManager.h"
 
 GameState GameLoop::current_state = GameState::SPLASH_SCREEN;
 
@@ -16,8 +17,9 @@ void GameLoop::initialize()
     window_manager = new GameWindow::GameWindowManager();
     game_window = window_manager->getGameWindow();
     event_manager = new Event::EventPollingManager(game_window);
-
     splash_screen_manager = new UI::SplashScreenManager(game_window);
+    gameplay_manager = new Gameplay::GameplayManager();
+
 
     // Initialize Sounds:
     Sound::SoundManager::Initialize();
@@ -32,6 +34,7 @@ GameLoop::~GameLoop()
     delete window_manager;
     delete event_manager;
     delete splash_screen_manager;
+    delete gameplay_manager;
 }
 
 void GameLoop::update()
@@ -74,7 +77,7 @@ void GameLoop::render()
         std::cout<<"Will render the State Soon\n";
         break;
     case GameState::GAMEPLAY:
-        std::cout<<"Will render the State Soon \n";
+        gameplay_manager->render(*game_window);
         break;
         case GameState::EXIT:
         std::cout<<"Exited the Game loop Successfully\n"; 

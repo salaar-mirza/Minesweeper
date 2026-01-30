@@ -73,6 +73,36 @@ package UI {
     }
 }
 
+package Gameplay {
+    class Board {
+        - float boardWidth
+        - float boardHeight
+        - float boardPosition
+        - string boardTexturePath
+        - sf::Texture boardTexture
+        - sf::Sprite boardSprite
+        - void initializeBoardImage()
+        - void initialize()
+        + Board()
+        + void render(sf::RenderWindow&)
+    }
+
+    class GameplayManager {
+        - Board* board
+        - float background_alpha
+        - sf::Texture background_texture
+        - sf::Sprite background_sprite
+        - string background_texture_path
+        - void initialize()
+        - void initializeVariables()
+        - void initializeBackground()
+        + GameplayManager()
+        + ~GameplayManager()
+        + void render(sf::RenderWindow&)
+    }
+    GameplayManager *-- Board
+}
+
 package Sound {
     enum SoundType {
         BUTTON_CLICK
@@ -99,6 +129,7 @@ class GameLoop {
     - Event::EventPollingManager* event_manager
     - sf::RenderWindow* game_window
     - UI::SplashScreenManager* splash_screen_manager
+    - Gameplay::GameplayManager* gameplay_manager
     - {static} GameState current_state
     + GameLoop()
     + ~GameLoop()
@@ -116,6 +147,7 @@ enum GameState {
 GameLoop *-- GameWindow.GameWindowManager : Composes
 GameLoop *-- Event.EventPollingManager : Composes
 GameLoop *-- UI.SplashScreenManager : Composes
+GameLoop *-- Gameplay.GameplayManager : Composes
 GameLoop ..> Sound.SoundManager : Uses
 GameLoop ..> TimeManager : Uses
 GameLoop ..> GameState : Uses
