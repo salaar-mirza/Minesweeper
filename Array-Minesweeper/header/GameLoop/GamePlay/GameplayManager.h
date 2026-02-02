@@ -22,7 +22,7 @@ namespace Gameplay
 
     public:
         GameplayManager();
-        ~GameplayManager() = default;
+        ~GameplayManager();
 
         void render(sf::RenderWindow& window);
     };

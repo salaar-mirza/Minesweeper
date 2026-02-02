@@ -8,6 +8,11 @@ namespace Gameplay
         initialize();
     }
 
+    GameplayManager::~GameplayManager()
+    {
+        delete board;
+    }
+
     void GameplayManager::initialize()
     {
         initializeBackground();
