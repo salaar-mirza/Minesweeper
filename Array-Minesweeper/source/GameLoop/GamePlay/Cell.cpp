@@ -9,13 +9,6 @@ namespace Gameplay
         initialize(width, height, position);
     }
 
-    /*void Cell::initialize(float width, float height, sf::Vector2i position)
-    {
-        this->position = position;
-        sf::Vector2f float_position(static_cast<float>(position.x), static_cast<float>(position.y));  //Convert int to float
-        cell_button = new UIElements::Button(cell_texture_path, float_position, width, height);
-    }*/
-
     void Cell::initialize(float width, float height, sf::Vector2i position)
     {
         this->position = position;
@@ -34,46 +27,16 @@ namespace Gameplay
 
     void Cell::setCellTexture()
     {
+        int index = static_cast<int>(cell_type);
+
         switch (current_cell_state)
         {
-        case CellState::OPEN:
-            switch (cell_type)
-            {
-        case CellType::EMPTY:
-                cell_button->setTextureRect(sf::IntRect(0 * tile_size, 0, tile_size, tile_size));
-                break;
-        case CellType::ONE:
-                cell_button->setTextureRect(sf::IntRect(1 * tile_size, 0, tile_size, tile_size));
-                break;
-        case CellType::TWO:
-                cell_button->setTextureRect(sf::IntRect(2 * tile_size, 0, tile_size, tile_size));
-                break;
-        case CellType::THREE:
-                cell_button->setTextureRect(sf::IntRect(3 * tile_size, 0, tile_size, tile_size));
-                break;
-        case CellType::FOUR:
-                cell_button->setTextureRect(sf::IntRect(4 * tile_size, 0, tile_size, tile_size));
-                break;
-        case CellType::FIVE:
-                cell_button->setTextureRect(sf::IntRect(5 * tile_size, 0, tile_size, tile_size));
-                break;
-        case CellType::SIX:
-                cell_button->setTextureRect(sf::IntRect(6 * tile_size, 0, tile_size, tile_size));
-                break;
-        case CellType::SEVEN:
-                cell_button->setTextureRect(sf::IntRect(7 * tile_size, 0, tile_size, tile_size));
-                break;
-        case CellType::EIGHT:
-                cell_button->setTextureRect(sf::IntRect(8 * tile_size, 0, tile_size, tile_size));
-                break;
-        case CellType::MINE:
-                cell_button->setTextureRect(sf::IntRect(9 * tile_size, 0, tile_size, tile_size));
-                break;
-            }
-            break;
-
         case CellState::HIDDEN:
             cell_button->setTextureRect(sf::IntRect(10 * tile_size, 0, tile_size, tile_size));
+            break;
+
+        case CellState::OPEN:
+            cell_button->setTextureRect(sf::IntRect(index * tile_size, 0, tile_size, tile_size));
             break;
 
         case CellState::FLAGGED:
