@@ -42,6 +42,9 @@ namespace Gameplay
     class Cell
     {
     private:
+        
+        const float cell_top_offset = 274.f;
+        const float cell_left_offset = 583.f;
         // Cell data members
         CellState current_cell_state = CellState::HIDDEN;
         CellType cell_type = CellType::EMPTY;
@@ -55,6 +58,8 @@ namespace Gameplay
         UIElements::Button* cell_button;
 
         void initialize(float width, float height, sf::Vector2i position);
+
+        sf::Vector2f getCellScreenPosition() const;
 
     public:
         Cell(float width, float height, sf::Vector2i position);
