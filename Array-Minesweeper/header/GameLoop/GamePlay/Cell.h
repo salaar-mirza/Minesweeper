@@ -16,10 +16,36 @@ namespace Event
 
 namespace Gameplay
 {
+
+    enum class CellState
+    {
+        HIDDEN,
+        OPEN,
+        FLAGGED,
+    };
+
+    enum class CellType
+    {
+        EMPTY,
+        ONE,
+        TWO,
+        THREE,
+        FOUR,
+        FIVE,
+        SIX,
+        SEVEN,
+        EIGHT,
+        MINE,
+    };
+    
     
     class Cell
     {
     private:
+        // Cell data members
+        CellState current_cell_state = CellState::HIDDEN;
+        CellType cell_type = CellType::EMPTY;
+        
         sf::Vector2i position;
 
         const int tile_size = 128;
@@ -34,6 +60,13 @@ namespace Gameplay
         Cell(float width, float height, sf::Vector2i position);
         ~Cell() = default;
 
+        //Getters, Setters
+        CellState getCellState() const;
+        void setCellState(CellState state);
+        CellType getCellType() const;
+        void setCellType(CellType type);
+        
+        void setCellTexture();
         void render(sf::RenderWindow& window);
     };
 }
