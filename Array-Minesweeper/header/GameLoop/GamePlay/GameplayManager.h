@@ -7,13 +7,13 @@ namespace Gameplay
     class GameplayManager
     {
     private:
-        Board* board;
-
         const float background_alpha = 85.f;
+        std::string background_texture_path = "assets/textures/minesweeper_bg.png";
 	    
         sf::Texture background_texture;
         sf::Sprite background_sprite;
-        std::string background_texture_path = "assets/textures/minesweeper_bg.png";
+
+        Board* board;
         
         void initialize();
         void initializeVariables();

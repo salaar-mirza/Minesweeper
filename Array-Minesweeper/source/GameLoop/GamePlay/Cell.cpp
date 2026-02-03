@@ -4,9 +4,9 @@
 
 namespace Gameplay
 {
-    Cell::Cell(float width, float height, sf::Vector2i position)
+    Cell::Cell(sf::Vector2i position, float width, float height)
     {
-        initialize(width, height, position);
+        initialize(position, width, height);
     }
 
     /*void Cell::initialize(float width, float height, sf::Vector2i position)
@@ -16,7 +16,7 @@ namespace Gameplay
         cell_button = new UIElements::Button(cell_texture_path, cellScreenPosition, width * slice_count, height); // multiply width by slice count
     }*/
 
-    void Cell::initialize(float width, float height, sf::Vector2i position)
+    void Cell::initialize(sf::Vector2i position, float width, float height)
     {
         this->position = position; // will be used in the future content
         sf::Vector2f cellScreenPosition = getCellScreenPosition(width, height);

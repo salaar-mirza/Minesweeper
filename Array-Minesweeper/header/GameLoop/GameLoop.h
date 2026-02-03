@@ -34,15 +34,13 @@ enum class GameState
 
 class GameLoop {
 private:
-    GameWindow::GameWindowManager* window_manager;
-    Event::EventPollingManager* event_manager;
+    static GameState current_state;
 
     sf::RenderWindow* game_window;
+    GameWindow::GameWindowManager* window_manager;
+    Event::EventPollingManager* event_manager;
     UI::SplashScreenManager* splash_screen_manager;
     Gameplay::GameplayManager* gameplay_manager;
-
-
-    static GameState current_state;
 
     void initialize();
     void update();

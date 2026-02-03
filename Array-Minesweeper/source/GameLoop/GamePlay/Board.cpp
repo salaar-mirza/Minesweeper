@@ -28,7 +28,7 @@ namespace Gameplay
     {
         float cell_width = getCellWidthInBoard();
         float cell_height = getCellHeightInBoard();
-        cell = new Cell(cell_width, cell_height, sf::Vector2i(0, 0));
+        cell = new Cell(sf::Vector2i(0, 0), cell_width, cell_height);
     }
 
     
