@@ -26,7 +26,7 @@ namespace Gameplay
         // Board Objects
         sf::Texture boardTexture;
         sf::Sprite boardSprite;
-        Cell* cell;
+        Cell* cell[numberOfColumns];
 
         void initializeBoardImage();
         void initialize();
