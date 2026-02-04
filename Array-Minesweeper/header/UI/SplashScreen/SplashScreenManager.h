@@ -4,16 +4,16 @@
 namespace UI {
     class SplashScreenManager {
     private:
+        float logo_width = 600.f;
+        float logo_height = 134.f;
+        float logo_animation_duration = 2.0f;
+        std::string logo_texture_path = "assets/textures/outscal_logo.png";
+
+        float elapsed_time = 0.0f;
+
         sf::RenderWindow* game_window;
         sf::Texture logo_texture;
         sf::Sprite logo_sprite;
-
-         float logo_width = 600.f;
-         float logo_height = 134.f;
-         float logo_animation_duration = 2.0f;
-         std::string logo_texture_path = "assets/textures/outscal_logo.png";
-
-        float elapsed_time = 0.0f;
 
         void initialize();
         sf::Vector2f getLogoPosition();

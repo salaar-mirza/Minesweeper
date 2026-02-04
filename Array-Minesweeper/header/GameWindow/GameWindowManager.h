@@ -11,15 +11,14 @@ namespace GameWindow
 		// which can cause issues with object management and flexibility. This also allows
 		// for future features like a settings menu to change these values at runtime.
 
-		int frame_rate = 60;
-		std::string game_window_title = "Outscal Presents - Minesweeper";
-
 		int game_window_width = 1920;
 		int game_window_height = 1080;
+		int frame_rate = 60;
+		std::string game_window_title = "Outscal Presents - Minesweeper";
+		sf::Color window_color = sf::Color(200, 200, 0, 255);
 
 		sf::RenderWindow* game_window;
 		sf::VideoMode video_mode;
-		sf::Color window_color = sf::Color(200, 200, 0, 255);
 
 		void initialize();
 		sf::RenderWindow* createGameWindow();

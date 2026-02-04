@@ -1,18 +1,37 @@
 #include "../../header/GameLoop/Gameplay/Board.h"
+#include "../../header/GameLoop/Gameplay/Cell.h"
 #include <iostream>
+
+
 namespace Gameplay
 {
     Board::Board()
     {
         initialize();
+
+    }
+
+    Board::~Board()
+    {
+        delete cell;
     }
 
     void Board::initialize()
     {
         initializeBoardImage();
+        createBoard(); //Call Create Board method:
+
     }
 
+  
+    void Board::createBoard()
+    {
+        float cell_width = getCellWidthInBoard();
+        float cell_height = getCellHeightInBoard();
+        cell = new Cell(sf::Vector2i(0, 0), cell_width, cell_height);
+    }
 
+    
     void Board::initializeBoardImage() {
         if (!boardTexture.loadFromFile(boardTexturePath)) {
             std::cout << "Failed to load board texture!\n";
@@ -25,9 +44,21 @@ namespace Gameplay
                             boardHeight / boardTexture.getSize().y);
     }
 
+    float Board::getCellWidthInBoard() const
+    {
+        return (boardWidth - horizontalCellPadding) / numberOfColumns;
+    }
+
+    float Board::getCellHeightInBoard() const
+    {
+        return (boardHeight - verticalCellPadding) / numberOfRows;
+    }
+
+
     void Board::render(sf::RenderWindow& window)
     {
         window.draw(boardSprite);
+        cell->render(window);   //Render the cell   
     }
 
 

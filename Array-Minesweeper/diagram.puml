@@ -73,17 +73,78 @@ package UI {
     }
 }
 
+package UIElements {
+    class Button {
+        - sf::Sprite buttonSprite
+        - sf::Texture button_texture
+        - void initialize(string, sf::Vector2f, float, float)
+        + Button(string, sf::Vector2f, float, float)
+        + void setTextureRect(sf::IntRect)
+        + void render(sf::RenderWindow&)
+    }
+}
+
 package Gameplay {
+    enum CellState {
+        HIDDEN
+        OPEN
+        FLAGGED
+    }
+
+    enum CellType {
+        EMPTY
+        ONE
+        TWO
+        THREE
+        FOUR
+        FIVE
+        SIX
+        SEVEN
+        EIGHT
+        MINE
+    }
+
+    class Cell {
+        - float cell_top_offset
+        - float cell_left_offset
+        - CellState current_cell_state
+        - CellType cell_type
+        - sf::Vector2i position
+        - int tile_size
+        - int slice_count
+        - string cell_texture_path
+        - UIElements::Button* cell_button
+        - void initialize(float, float, sf::Vector2i)
+        - sf::Vector2f getCellScreenPosition(float, float)
+        + Cell(float, float, sf::Vector2i)
+        + ~Cell()
+        + CellState getCellState()
+        + void setCellState(CellState)
+        + CellType getCellType()
+        + void setCellType(CellType)
+        + void setCellTexture()
+        + void render(sf::RenderWindow&)
+    }
+
     class Board {
+        - Cell* cell
         - float boardWidth
         - float boardHeight
         - float boardPosition
+        - {static} int numberOfRows
+        - {static} int numberOfColumns
+        - float horizontalCellPadding
+        - float verticalCellPadding
         - string boardTexturePath
         - sf::Texture boardTexture
         - sf::Sprite boardSprite
         - void initializeBoardImage()
         - void initialize()
+        - void createBoard()
+        - float getCellWidthInBoard()
+        - float getCellHeightInBoard()
         + Board()
+        + ~Board()
         + void render(sf::RenderWindow&)
     }
 
@@ -101,6 +162,10 @@ package Gameplay {
         + void render(sf::RenderWindow&)
     }
     GameplayManager *-- Board
+    Board *-- Cell
+    Cell *-- UIElements.Button
+    Cell ..> CellState
+    Cell ..> CellType
 }
 
 package Sound {
@@ -112,6 +177,20 @@ package Sound {
     }
 
     class SoundManager {
+        - {static} sf::Music backgroundMusic
+        - {static} sf::SoundBuffer bufferButtonClick
+        - {static} sf::SoundBuffer bufferFlagSound
+        - {static} sf::SoundBuffer bufferExplosion
+        - {static} sf::SoundBuffer bufferGameWon
+        - {static} sf::Sound soundEffect
+        - {static} float backgroundMusicVolume
+        - {static} string button_click_path
+        - {static} string flag_sound_path
+        - {static} string explosion_sound_path
+        - {static} string game_won_sound_path
+        - {static} string background_path
+        - {static} void LoadBackgroundMusicFromFile()
+        - {static} void LoadSoundFromFile()
         + {static} void Initialize()
         + {static} void PlaySound(SoundType)
         + {static} void PlayBackgroundMusic()
@@ -119,9 +198,17 @@ package Sound {
     SoundManager ..> SoundType
 }
 
-class TimeManager {
-    + {static} void initialize()
-    + {static} void update()
+package Time {
+    class TimeManager {
+        - {static} std::chrono::time_point previous_time
+        - {static} float delta_time
+        - {static} void updateDeltaTime()
+        - {static} float calculateDeltaTime()
+        - {static} void updatePreviousTime()
+        + {static} void initialize()
+        + {static} void update()
+        + {static} float getDeltaTime()
+    }
 }
 
 class GameLoop {
@@ -131,6 +218,9 @@ class GameLoop {
     - UI::SplashScreenManager* splash_screen_manager
     - Gameplay::GameplayManager* gameplay_manager
     - {static} GameState current_state
+    - void initialize()
+    - void update()
+    - void render()
     + GameLoop()
     + ~GameLoop()
     + void run()
@@ -149,7 +239,7 @@ GameLoop *-- Event.EventPollingManager : Composes
 GameLoop *-- UI.SplashScreenManager : Composes
 GameLoop *-- Gameplay.GameplayManager : Composes
 GameLoop ..> Sound.SoundManager : Uses
-GameLoop ..> TimeManager : Uses
+GameLoop ..> Time.TimeManager : Uses
 GameLoop ..> GameState : Uses
 
 @enduml
