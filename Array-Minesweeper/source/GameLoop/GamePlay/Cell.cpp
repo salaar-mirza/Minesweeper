@@ -19,6 +19,7 @@ namespace Gameplay
         this->position = position; // will be used in the future content
         sf::Vector2f cellScreenPosition = getCellScreenPosition(width, height);
         cell_button = new UIElements::Button(cell_texture_path, cellScreenPosition, width * slice_count, height);
+        current_cell_state = CellState::OPEN;
     }
 
     sf::Vector2f Cell::getCellScreenPosition(float width, float height) const

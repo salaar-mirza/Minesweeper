@@ -26,11 +26,16 @@ namespace Gameplay
     void Board::initialize()
     {
         initializeBoardImage();
+        initializeVariables();
         createBoard(); //Call Create Board method:
+        populateBoard();
 
     }
 
-  
+    void Board::initializeVariables()
+    {
+        randomEngine.seed(randomDevice()); //Function to initialize random engine
+    }
     void Board::createBoard()
     {
         float cell_width = getCellWidthInBoard();
@@ -68,6 +73,32 @@ namespace Gameplay
         return (boardHeight - verticalCellPadding) / numberOfRows;
     }
 
+    void Board::populateBoard()
+    {
+        populateMines();
+    }
+
+
+    void Board::populateMines() 
+    {
+        //Step 1
+        std::uniform_int_distribution<int> x_dist(0, numberOfColumns - 1);
+        std::uniform_int_distribution<int> y_dist(0, numberOfRows - 1); 		
+        int mines_placed = 0;
+		
+        //Step 2
+        int x = x_dist(randomEngine);
+        int y = y_dist(randomEngine);
+    
+        //Step 3
+        if (cell[x][y]->getCellType() != CellType::MINE) {
+            //Step 4
+            cell[x][y]->setCellType(CellType::MINE);
+            ++mines_placed;
+        }
+    }
+
+    
 
     void Board::render(sf::RenderWindow& window)
     {
