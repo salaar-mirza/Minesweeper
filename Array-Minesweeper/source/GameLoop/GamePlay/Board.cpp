@@ -13,8 +13,12 @@ namespace Gameplay
 
     Board::~Board()
     {
-        for (int col = 0; col < numberOfColumns; ++col) {
-            delete cell[col];
+        for (int col = 0; col < numberOfColumns; ++col)
+            {
+            for (int row = 0; row < numberOfRows; ++row)
+            {
+                delete cell[row][col];
+            }
         }
         
     }
@@ -31,9 +35,13 @@ namespace Gameplay
     {
         float cell_width = getCellWidthInBoard();
         float cell_height = getCellHeightInBoard();
-        //Create a cell for each array index
-        for (int col = 0; col < numberOfColumns; ++col) {
-            cell[col] = new Cell(sf::Vector2i(col, 0),cell_width, cell_height);
+        //create cells for the cell[][] array
+        for (int row = 0; row < numberOfRows; ++row)
+        {
+            for (int col = 0; col < numberOfColumns; ++col)
+            {
+                cell[row][col] = new Cell(sf::Vector2i(row, col),cell_width, cell_height);
+            }
         }
     }
 
@@ -64,12 +72,12 @@ namespace Gameplay
     void Board::render(sf::RenderWindow& window)
     {
         window.draw(boardSprite);
-        //render array's elements one by one
-        for (int col = 0; col < numberOfColumns; ++col) {
-            cell[col]->render(window);
-        } 
-    }
-
-
+    
+        for (int row = 0; row < numberOfRows; ++row)
+        {
+            for (int col = 0; col < numberOfColumns; ++col)
+                cell[row][col]->render(window);
+        }
+     }
     
 }
