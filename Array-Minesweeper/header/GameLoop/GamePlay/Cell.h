@@ -62,7 +62,7 @@ namespace Gameplay
 
     public:
         Cell(sf::Vector2i position, float width, float height);
-        ~Cell() = default;
+        ~Cell();
 
         //Getters, Setters
         CellState getCellState() const;
