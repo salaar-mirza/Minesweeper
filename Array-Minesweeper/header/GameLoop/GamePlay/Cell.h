@@ -1,4 +1,5 @@
 #pragma once
+#include "../../UI/UIElements/Button/Button.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -13,6 +14,10 @@ namespace Event
     class EventPollingManager;
 }
 
+namespace Gameplay
+{
+    class Board;
+}
 
 namespace Gameplay
 {
@@ -56,18 +61,24 @@ namespace Gameplay
 
         UIElements::Button* cell_button;
 
-        void initialize(sf::Vector2i position, float width, float height);
+        Board* board;
+
+        void initialize(sf::Vector2i position, float width, float height, Board* board);
+
+        void registerCellButtonCallback();
+        void cellButtonCallback(UIElements::MouseButtonType button_type);
 
         sf::Vector2f getCellScreenPosition(float width,float height) const;
 
     public:
-        Cell(sf::Vector2i position, float width, float height);
+        Cell(sf::Vector2i position, float width, float height, Board* board);
         ~Cell();
         
         void update(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
 
         //Getters, Setters
         CellState getCellState() const;
+        sf::Vector2i getCellPosition();
         void setCellState(CellState state);
         CellType getCellType() const;
         void setCellType(CellType type);

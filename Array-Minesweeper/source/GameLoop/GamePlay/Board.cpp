@@ -23,6 +23,13 @@ namespace Gameplay
         
     }
 
+    void Board::onCellButtonClicked(sf::Vector2i cell_position, UIElements::MouseButtonType mouse_button_type) {
+        if (mouse_button_type == UIElements::MouseButtonType::LEFT_MOUSE_BUTTON) {
+            // Left-click logic will be added in the next lesson
+        } else if (mouse_button_type == UIElements::MouseButtonType::RIGHT_MOUSE_BUTTON) {
+            // Right-click logic will be added in the next lesson
+        }
+    }
     void Board::update(Event::EventPollingManager& eventManager, sf::RenderWindow& window)
     {
         for (int row = 0; row < numberOfRows; ++row)
@@ -71,14 +78,10 @@ namespace Gameplay
     {
         float cell_width = getCellWidthInBoard();
         float cell_height = getCellHeightInBoard();
-        //create cells for the cell[][] array
+
         for (int row = 0; row < numberOfRows; ++row)
-        {
             for (int col = 0; col < numberOfColumns; ++col)
-            {
-                cell[row][col] = new Cell(sf::Vector2i(col, row),cell_width, cell_height);
-            }
-        }
+                cell[row][col] = new Cell(sf::Vector2i(col, row),cell_width, cell_height, this); //pass the board as a parameter
     }
 
     float Board::getCellWidthInBoard() const
@@ -149,7 +152,7 @@ namespace Gameplay
                     mines_around++;
             }
             
-            }
+        }
         return mines_around;
     }
 

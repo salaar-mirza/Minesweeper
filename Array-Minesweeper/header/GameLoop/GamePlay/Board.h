@@ -2,6 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 #include <random>
+
+#include "../../UI/UIElements/Button/Button.h"
+
 namespace Gameplay
 {
     class Cell;
@@ -61,6 +64,8 @@ namespace Gameplay
     		
         Board();
         ~Board();
+        void onCellButtonClicked(sf::Vector2i cell_position,UIElements:: MouseButtonType mouse_button_type);
+
         void update(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
         
         void render(sf::RenderWindow& window);

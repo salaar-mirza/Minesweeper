@@ -1,12 +1,13 @@
 #include "../../header/GameLoop/Gameplay/Cell.h"
+#include "../../header/GameLoop/Gameplay/Board.h"
 #include "../../header/UI/UIElements/Button/Button.h"
 
 
 namespace Gameplay
 {
-    Cell::Cell(sf::Vector2i position, float width, float height)
+    Cell::Cell(sf::Vector2i position, float width, float height, Board* board)
     {
-        initialize(position, width, height);
+        initialize(position, width, height, board);
     }
 
     Cell::~Cell()
@@ -56,18 +57,33 @@ namespace Gameplay
 
     void Cell::setCellType(CellType type) { cell_type = type; }
 
-    void Cell::initialize(sf::Vector2i position, float width, float height)
+    void Cell::initialize(sf::Vector2i position, float width, float height, Board* board)
     {
         this->position = position; // will be used in the future content
+        this->board = board;
         sf::Vector2f cellScreenPosition = getCellScreenPosition(width, height);
         cell_button = new UIElements::Button(cell_texture_path, cellScreenPosition, width * slice_count, height);
-        current_cell_state = CellState::OPEN;
+        current_cell_state = CellState::HIDDEN;
+        
+        registerCellButtonCallback();
+    }
+    
+        sf::Vector2f Cell::getCellScreenPosition(float width, float height) const
+        {
+            float xScreenPosition = cell_left_offset + position.x * width;
+            float yScreenPosition = cell_top_offset + position.y * height;
+            return sf::Vector2f(xScreenPosition, yScreenPosition);
+        }
+
+    void Cell::registerCellButtonCallback() {
+        cell_button->registerCallbackFunction([this](UIElements::MouseButtonType button_type) {
+            cellButtonCallback(button_type);  // Call Cell's own callback logic
+        });
     }
 
-    sf::Vector2f Cell::getCellScreenPosition(float width, float height) const
-    {
-        float xScreenPosition = cell_left_offset + position.x * width;
-        float yScreenPosition = cell_top_offset + position.y * height;
-        return sf::Vector2f(xScreenPosition, yScreenPosition);
+    void Cell::cellButtonCallback(UIElements::MouseButtonType button_type) {
+        board->onCellButtonClicked(getCellPosition(), button_type);
     }
+    sf::Vector2i Cell::getCellPosition() { return position; } 
+    
 }
