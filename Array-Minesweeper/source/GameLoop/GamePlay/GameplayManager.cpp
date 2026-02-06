@@ -13,6 +13,11 @@ namespace Gameplay
         delete board;
     }
 
+    void GameplayManager::update(Event::EventPollingManager& eventManager, sf::RenderWindow& window)
+    {
+        board->update(eventManager, window);
+    }
+    
     void GameplayManager::initialize()
     {
         initializeBackground();

@@ -22,6 +22,12 @@ namespace Gameplay
         current_cell_state = CellState::OPEN;
     }
 
+    void Cell::update(Event::EventPollingManager& eventManager, sf::RenderWindow& window)
+    {
+        if (cell_button)
+            cell_button->handleButtonInteractions(eventManager, window);
+    }
+
     sf::Vector2f Cell::getCellScreenPosition(float width, float height) const
     {
         float xScreenPosition = cell_left_offset + position.x * width;

@@ -63,6 +63,8 @@ namespace Gameplay
     public:
         Cell(sf::Vector2i position, float width, float height);
         ~Cell();
+        
+        void update(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
 
         //Getters, Setters
         CellState getCellState() const;

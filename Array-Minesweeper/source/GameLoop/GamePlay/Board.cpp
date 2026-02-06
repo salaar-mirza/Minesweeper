@@ -32,6 +32,13 @@ namespace Gameplay
 
     }
 
+    void Board::update(Event::EventPollingManager& eventManager, sf::RenderWindow& window)
+    {
+        for (int row = 0; row < numberOfRows; ++row)
+            for (int col = 0; col < numberOfColumns; ++col)
+                cell[row][col]->update(eventManager, window);
+    }
+    
     void Board::initializeVariables()
     {
         randomEngine.seed(randomDevice()); //Function to initialize random engine

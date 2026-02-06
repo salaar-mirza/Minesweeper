@@ -39,9 +39,14 @@ namespace UIElements {
 
     public:
         Button(const std::string& texture_path, const sf::Vector2f& position, float width, float height);
+
         
         void setTextureRect(const sf::IntRect& rect);
 
+        bool isMouseOnSprite(Event::EventPollingManager& event_manager, const sf::RenderWindow& window);
+        
+        void handleButtonInteractions(Event::EventPollingManager& event_manager, const sf::RenderWindow& window);
+        
         void render(sf::RenderWindow& window) const;
     };
 }

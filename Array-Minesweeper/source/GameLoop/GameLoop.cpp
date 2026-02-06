@@ -52,6 +52,8 @@ void GameLoop::update()
         std::cout<<"Will update the State Soon\n";
         break;
     case GameState::GAMEPLAY:
+        gameplay_manager->update(*event_manager, *game_window); //update gameplay_manager
+        break;
         break;
     case GameState::EXIT:
         game_window->close();

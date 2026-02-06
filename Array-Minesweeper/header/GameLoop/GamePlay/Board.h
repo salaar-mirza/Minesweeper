@@ -6,6 +6,10 @@ namespace Gameplay
 {
     class Cell;
 }
+namespace Event
+{
+    class EventPollingManager;
+}
 
 namespace Gameplay
 {
@@ -38,6 +42,7 @@ namespace Gameplay
         void initializeBoardImage();
         void initialize();
 
+       
         void createBoard();
 
         float getCellWidthInBoard() const;
@@ -56,6 +61,7 @@ namespace Gameplay
     		
         Board();
         ~Board();
+        void update(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
         
         void render(sf::RenderWindow& window);
     };
