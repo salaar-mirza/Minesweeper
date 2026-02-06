@@ -84,6 +84,11 @@ namespace Gameplay
     void Cell::cellButtonCallback(UIElements::MouseButtonType button_type) {
         board->onCellButtonClicked(getCellPosition(), button_type);
     }
-    sf::Vector2i Cell::getCellPosition() { return position; } 
+    sf::Vector2i Cell::getCellPosition() { return position; }
+
+    void Cell::open() {
+        setCellState(CellState::OPEN); // Change state to OPEN
+    }
+    bool Cell::canOpenCell() const { return current_cell_state == CellState::HIDDEN; }
     
 }

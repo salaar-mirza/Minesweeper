@@ -1,5 +1,6 @@
 #include "../../header/GameLoop/Gameplay/Board.h"
 #include "../../header/GameLoop/Gameplay/Cell.h"
+#include "../../header/Sound/SoundManager.h"
 #include <iostream>
 
 
@@ -25,11 +26,20 @@ namespace Gameplay
 
     void Board::onCellButtonClicked(sf::Vector2i cell_position, UIElements::MouseButtonType mouse_button_type) {
         if (mouse_button_type == UIElements::MouseButtonType::LEFT_MOUSE_BUTTON) {
-            // Left-click logic will be added in the next lesson
+            Sound::SoundManager::PlaySound(Sound::SoundType::BUTTON_CLICK); //play click sound
+            openCell(cell_position); // Open the cell when left-clicked
         } else if (mouse_button_type == UIElements::MouseButtonType::RIGHT_MOUSE_BUTTON) {
             // Right-click logic will be added in the next lesson
         }
     }
+
+    void Board::openCell(sf::Vector2i cell_position) {
+        if (!cell[cell_position.y][cell_position.x]->canOpenCell()) {
+            return; // Can't open this cell!
+        }
+        cell[cell_position.y][cell_position.x]->open(); // Open it!
+    }
+    
     void Board::update(Event::EventPollingManager& eventManager, sf::RenderWindow& window)
     {
         for (int row = 0; row < numberOfRows; ++row)

@@ -82,6 +82,9 @@ namespace Gameplay
         void setCellState(CellState state);
         CellType getCellType() const;
         void setCellType(CellType type);
+
+        bool canOpenCell() const;
+        void open();
         
         void setCellTexture();
         void render(sf::RenderWindow& window);
