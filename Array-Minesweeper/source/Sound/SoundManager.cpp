@@ -24,24 +24,6 @@ namespace Sound
         LoadSoundFromFile();
     }
 
-    void SoundManager::LoadBackgroundMusicFromFile()
-    {
-        if (!backgroundMusic.openFromFile(background_path))
-            std::cerr << "Error loading background music file: " << background_path << std::endl;
-    }
-
-    void SoundManager::LoadSoundFromFile()
-    {
-        if (!bufferButtonClick.loadFromFile(button_click_path))
-            std::cerr << "Error loading sound file: " << button_click_path << std::endl;
-        if (!bufferFlagSound.loadFromFile(flag_sound_path))
-            std::cerr << "Error loading sound file: " << flag_sound_path << std::endl;
-        if (!bufferExplosion.loadFromFile(explosion_sound_path))
-            std::cerr << "Error loading sound file: " << explosion_sound_path << std::endl;
-        if (!bufferGameWon.loadFromFile(game_won_sound_path))
-            std::cerr << "Error loading sound file: " << game_won_sound_path << std::endl;
-    }
-
     void SoundManager::PlaySound(SoundType soundType)
     {
         switch (soundType)
@@ -71,5 +53,23 @@ namespace Sound
         backgroundMusic.setLoop(true);
         backgroundMusic.setVolume(backgroundMusicVolume);
         backgroundMusic.play();
+    }
+
+    void SoundManager::LoadBackgroundMusicFromFile()
+    {
+        if (!backgroundMusic.openFromFile(background_path))
+            std::cerr << "Error loading background music file: " << background_path << std::endl;
+    }
+
+    void SoundManager::LoadSoundFromFile()
+    {
+        if (!bufferButtonClick.loadFromFile(button_click_path))
+            std::cerr << "Error loading sound file: " << button_click_path << std::endl;
+        if (!bufferFlagSound.loadFromFile(flag_sound_path))
+            std::cerr << "Error loading sound file: " << flag_sound_path << std::endl;
+        if (!bufferExplosion.loadFromFile(explosion_sound_path))
+            std::cerr << "Error loading sound file: " << explosion_sound_path << std::endl;
+        if (!bufferGameWon.loadFromFile(game_won_sound_path))
+            std::cerr << "Error loading sound file: " << game_won_sound_path << std::endl;
     }
 }

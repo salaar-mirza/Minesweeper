@@ -14,6 +14,10 @@ namespace UI
 
     SplashScreenManager::~SplashScreenManager() {}
 
+    void SplashScreenManager::update() {}
+
+    void SplashScreenManager::render() { drawLogo(); }
+
     void SplashScreenManager::initialize()
     {
         if (!logo_texture.loadFromFile(logo_texture_path))
@@ -22,10 +26,6 @@ namespace UI
         logo_sprite.setTexture(logo_texture);
         logo_sprite.setPosition(getLogoPosition());
     }
-
-    void SplashScreenManager::update() {}
-
-    void SplashScreenManager::render() { drawLogo(); }
 
     sf::Vector2f SplashScreenManager::getLogoPosition()
     {

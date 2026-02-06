@@ -1,9 +1,14 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <random>
 namespace Gameplay
 {
     class Cell;
+}
+namespace Event
+{
+    class EventPollingManager;
 }
 
 namespace Gameplay
@@ -23,23 +28,40 @@ namespace Gameplay
         float boardPosition = 530.f;
         std::string boardTexturePath = "assets/textures/board.png";
 
+        //Randomization
+        std::default_random_engine randomEngine;
+        std::random_device randomDevice;
+        
         // Board Objects
         sf::Texture boardTexture;
         sf::Sprite boardSprite;
         Cell* cell[numberOfRows][numberOfColumns];
+        //Number of Mines
+        static const int minesCount = 9;
 
         void initializeBoardImage();
         void initialize();
 
+       
         void createBoard();
 
         float getCellWidthInBoard() const;
         float getCellHeightInBoard() const;
 
+        //Populating the Board
+        void populateBoard();
+        void populateMines();
+        void initializeVariables();
+
+        int countMinesAround(sf::Vector2i cell_position);
+        void populateCells();
+        bool isValidCellPosition(sf::Vector2i cell_position);
+
     public:
     		
         Board();
         ~Board();
+        void update(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
         
         void render(sf::RenderWindow& window);
     };

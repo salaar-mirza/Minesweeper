@@ -2,6 +2,11 @@
 #include "../../header/GameLoop/Gameplay/Board.h"
 #include <SFML/Graphics.hpp>
 
+namespace Event
+{
+    class EventPollingManager;
+}
+
 namespace Gameplay
 {
     class GameplayManager
@@ -23,6 +28,9 @@ namespace Gameplay
     public:
         GameplayManager();
         ~GameplayManager();
+
+        void update(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
+      
 
         void render(sf::RenderWindow& window);
     };

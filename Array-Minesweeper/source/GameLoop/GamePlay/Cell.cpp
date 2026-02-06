@@ -14,28 +14,19 @@ namespace Gameplay
         delete cell_button;
     }
 
-    void Cell::initialize(sf::Vector2i position, float width, float height)
+    void Cell::update(Event::EventPollingManager& eventManager, sf::RenderWindow& window)
     {
-        this->position = position; // will be used in the future content
-        sf::Vector2f cellScreenPosition = getCellScreenPosition(width, height);
-        cell_button = new UIElements::Button(cell_texture_path, cellScreenPosition, width * slice_count, height);
+        if (cell_button)
+            cell_button->handleButtonInteractions(eventManager, window);
     }
 
-    sf::Vector2f Cell::getCellScreenPosition(float width, float height) const
-    {
-        float xScreenPosition = cell_left_offset + position.x * width;
-        float yScreenPosition = cell_top_offset + position.y * height;
-        return sf::Vector2f(xScreenPosition, yScreenPosition);
+    void Cell::render(sf::RenderWindow& window) {
+
+        //set cell's texture
+        setCellTexture();
+        //render the cell button
+        if (cell_button) cell_button ->render(window);
     }
-
-    CellState Cell::getCellState() const { return current_cell_state; }
-
-    void Cell::setCellState(CellState state) { current_cell_state = state; }
-
-    CellType Cell::getCellType() const { return cell_type; }
-
-    void Cell::setCellType(CellType type) { cell_type = type; }
-
 
     void Cell::setCellTexture()
     {
@@ -57,15 +48,26 @@ namespace Gameplay
         }
     }
 
-  
-    
-    
-    void Cell::render(sf::RenderWindow& window) {
+    CellState Cell::getCellState() const { return current_cell_state; }
 
-        //set cell's texture
-        setCellTexture();
-        //render the cell button
-        if (cell_button) cell_button ->render(window);
+    void Cell::setCellState(CellState state) { current_cell_state = state; }
+
+    CellType Cell::getCellType() const { return cell_type; }
+
+    void Cell::setCellType(CellType type) { cell_type = type; }
+
+    void Cell::initialize(sf::Vector2i position, float width, float height)
+    {
+        this->position = position; // will be used in the future content
+        sf::Vector2f cellScreenPosition = getCellScreenPosition(width, height);
+        cell_button = new UIElements::Button(cell_texture_path, cellScreenPosition, width * slice_count, height);
+        current_cell_state = CellState::OPEN;
     }
 
+    sf::Vector2f Cell::getCellScreenPosition(float width, float height) const
+    {
+        float xScreenPosition = cell_left_offset + position.x * width;
+        float yScreenPosition = cell_top_offset + position.y * height;
+        return sf::Vector2f(xScreenPosition, yScreenPosition);
+    }
 }

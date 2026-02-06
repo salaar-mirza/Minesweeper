@@ -13,15 +13,21 @@ namespace Gameplay
         delete board;
     }
 
+    void GameplayManager::update(Event::EventPollingManager& eventManager, sf::RenderWindow& window)
+    {
+        board->update(eventManager, window);
+    }
+
+    void GameplayManager::render(sf::RenderWindow& window)
+    {
+        window.draw(background_sprite);
+        board->render(window);
+    }
+
     void GameplayManager::initialize()
     {
         initializeBackground();
         initializeVariables();
-    }
-
-    void GameplayManager::initializeVariables()
-    {
-        board = new Board();
     }
 
     void GameplayManager::initializeBackground()
@@ -33,10 +39,8 @@ namespace Gameplay
         background_sprite.setColor(sf::Color(255, 255, 255, background_alpha));
     }
 
-    void GameplayManager::render(sf::RenderWindow& window)
+    void GameplayManager::initializeVariables()
     {
-        window.draw(background_sprite);
-        board->render(window);
-        
+        board = new Board();
     }
 }

@@ -1,4 +1,5 @@
 #include "../../header/UI/UIElements/Button/Button.h"
+#include  "../../header/Event/EventPollingManager.h"
 #include <iostream>
 
 namespace UIElements 
@@ -20,6 +21,26 @@ namespace UIElements
     void Button::setTextureRect(const sf::IntRect& rect) {
         //Set a rectangle on the texture
         buttonSprite.setTextureRect(rect);
+    }
+
+    bool Button::isMouseOnSprite(Event::EventPollingManager& event_manager, const sf::RenderWindow& window)
+    {
+        //Get the position of the mouse
+        sf::Vector2i mouse_position = event_manager.getMousePosition();
+    
+        //Check if the mouse’s position is present in the bounds of buttonSprite.
+        return buttonSprite.getGlobalBounds().contains(static_cast<float>(mouse_position.x), static_cast<float>(mouse_position.y));
+    }
+
+    void Button::handleButtonInteractions(Event::EventPollingManager& event_manager, const sf::RenderWindow& window) {
+
+        if (event_manager.pressedLeftMouseButton() && isMouseOnSprite(event_manager, window))
+            //handle logic
+                std::cout << "Left Click Detected" << std::endl;
+    
+        else if (event_manager.pressedRightMouseButton() && isMouseOnSprite(event_manager, window))
+            //handle logic
+                std::cout << "Right Click Detected" << std::endl;
     }
     
     void Button::render(sf::RenderWindow& window) const {

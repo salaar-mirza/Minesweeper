@@ -9,13 +9,6 @@ namespace Event
 
     EventPollingManager::~EventPollingManager() = default;
 
-    void EventPollingManager::initializeVariables(sf::RenderWindow* window)
-    {
-        game_window = window;
-        left_mouse_button_state = MouseButtonState::RELEASED;
-        right_mouse_button_state = MouseButtonState::RELEASED;
-    }
-
     void EventPollingManager::processEvents()
     {
         if (isGameWindowOpen())
@@ -32,6 +25,21 @@ namespace Event
     {
         updateMouseButtonState(left_mouse_button_state, sf::Mouse::Left);
         updateMouseButtonState(right_mouse_button_state, sf::Mouse::Right);
+    }
+
+    bool EventPollingManager::pressedEscapeKey() { return game_event.key.code == sf::Keyboard::Escape; }
+
+    bool EventPollingManager::pressedLeftMouseButton() { return left_mouse_button_state == MouseButtonState::PRESSED; }
+
+    bool EventPollingManager::pressedRightMouseButton() { return right_mouse_button_state == MouseButtonState::PRESSED; }
+
+    sf::Vector2i EventPollingManager::getMousePosition() { return sf::Mouse::getPosition(*game_window); }
+
+    void EventPollingManager::initializeVariables(sf::RenderWindow* window)
+    {
+        game_window = window;
+        left_mouse_button_state = MouseButtonState::RELEASED;
+        right_mouse_button_state = MouseButtonState::RELEASED;
     }
 
     void EventPollingManager::updateMouseButtonState(MouseButtonState& button_state, sf::Mouse::Button button_type)
@@ -59,12 +67,4 @@ namespace Event
     bool EventPollingManager::hasQuitGame() { return (isKeyboardEvent() && pressedEscapeKey()); }
 
     bool EventPollingManager::isKeyboardEvent() { return game_event.type == sf::Event::KeyPressed; }
-
-    bool EventPollingManager::pressedEscapeKey() { return game_event.key.code == sf::Keyboard::Escape; }
-
-    bool EventPollingManager::pressedLeftMouseButton() { return left_mouse_button_state == MouseButtonState::PRESSED; }
-
-    bool EventPollingManager::pressedRightMouseButton() { return right_mouse_button_state == MouseButtonState::PRESSED; }
-
-    sf::Vector2i EventPollingManager::getMousePosition() { return sf::Mouse::getPosition(*game_window); }
 }

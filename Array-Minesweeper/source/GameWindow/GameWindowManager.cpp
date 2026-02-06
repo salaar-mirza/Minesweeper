@@ -6,6 +6,14 @@ namespace GameWindow
 
 	GameWindowManager::~GameWindowManager() { onDestroy(); }
 
+	bool GameWindowManager::isGameWindowOpen() { return game_window->isOpen(); }
+
+	sf::RenderWindow* GameWindowManager::getGameWindow() { return game_window; }
+
+	void GameWindowManager::update() { }
+
+	void GameWindowManager::render() { }
+
 	void GameWindowManager::initialize()
 	{
 		game_window = createGameWindow();
@@ -26,12 +34,4 @@ namespace GameWindow
 	void GameWindowManager::onDestroy() { delete(game_window); }
 
 	void GameWindowManager::setFrameRate(int frame_rate_to_set) { game_window->setFramerateLimit(frame_rate_to_set); }
-
-	void GameWindowManager::update() { }
-
-	void GameWindowManager::render() { }
-
-	bool GameWindowManager::isGameWindowOpen() { return game_window->isOpen(); }
-
-	sf::RenderWindow* GameWindowManager::getGameWindow() { return game_window; }
 }
