@@ -31,6 +31,8 @@ namespace Gameplay
         float boardPosition = 530.f;
         std::string boardTexturePath = "assets/textures/board.png";
 
+        int flaggedCells;
+
         //Randomization
         std::default_random_engine randomEngine;
         std::random_device randomDevice;
@@ -61,6 +63,8 @@ namespace Gameplay
         bool isValidCellPosition(sf::Vector2i cell_position);
 
         void openCell(sf::Vector2i cell_position);
+
+        void toggleFlag(sf::Vector2i cell_position);
 
     public:
     		

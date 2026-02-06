@@ -28,9 +28,14 @@ namespace Gameplay
         if (mouse_button_type == UIElements::MouseButtonType::LEFT_MOUSE_BUTTON) {
             Sound::SoundManager::PlaySound(Sound::SoundType::BUTTON_CLICK); //play click sound
             openCell(cell_position); // Open the cell when left-clicked
-        } else if (mouse_button_type == UIElements::MouseButtonType::RIGHT_MOUSE_BUTTON) {
-            // Right-click logic will be added in the next lesson
         }
+        //Right Click
+        else if (mouse_button_type == UIElements::MouseButtonType::RIGHT_MOUSE_BUTTON)
+        {
+            Sound::SoundManager::PlaySound(Sound::SoundType::FLAG);//play flag sound
+            toggleFlag(cell_position);
+        }
+
     }
 
     void Board::openCell(sf::Vector2i cell_position) {
@@ -38,6 +43,11 @@ namespace Gameplay
             return; // Can't open this cell!
         }
         cell[cell_position.y][cell_position.x]->open(); // Open it!
+    }
+
+    void Board::toggleFlag(sf::Vector2i cell_position) {
+        cell[cell_position.y][cell_position.x]->toggleFlag();
+        flaggedCells += (cell[cell_position.y][cell_position.x]->getCellState() == CellState::FLAGGED) ? 1 : -1;
     }
     
     void Board::update(Event::EventPollingManager& eventManager, sf::RenderWindow& window)
