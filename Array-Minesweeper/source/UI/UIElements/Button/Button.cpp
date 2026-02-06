@@ -18,6 +18,11 @@ namespace UIElements
         buttonSprite.setScale(width / button_texture.getSize().x, height / button_texture.getSize().y);
     }
 
+    void Button::setTextureRect(const sf::IntRect& rect) {
+        //Set a rectangle on the texture
+        buttonSprite.setTextureRect(rect);
+    }
+
     bool Button::isMouseOnSprite(Event::EventPollingManager& event_manager, const sf::RenderWindow& window)
     {
         //Get the position of the mouse
@@ -25,11 +30,6 @@ namespace UIElements
     
         //Check if the mouse’s position is present in the bounds of buttonSprite.
         return buttonSprite.getGlobalBounds().contains(static_cast<float>(mouse_position.x), static_cast<float>(mouse_position.y));
-    }
-
-    void Button::setTextureRect(const sf::IntRect& rect) {
-        //Set a rectangle on the texture
-        buttonSprite.setTextureRect(rect);
     }
 
     void Button::handleButtonInteractions(Event::EventPollingManager& event_manager, const sf::RenderWindow& window) {

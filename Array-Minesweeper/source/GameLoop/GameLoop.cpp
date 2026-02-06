@@ -29,12 +29,14 @@ void GameLoop::initialize()
     Time::TimeManager::initialize();
 }
 
-GameLoop::~GameLoop()
+void GameLoop::run()
 {
-    delete window_manager;
-    delete event_manager;
-    delete splash_screen_manager;
-    delete gameplay_manager;
+    while (window_manager->isGameWindowOpen())
+    {
+        event_manager->processEvents();
+        update();
+        render();
+    }
 }
 
 void GameLoop::update()
@@ -91,14 +93,12 @@ void GameLoop::render()
     game_window->display();
 }
 
-void GameLoop::run()
-{
-    while (window_manager->isGameWindowOpen())
-    {
-        event_manager->processEvents();
-        update();
-        render();
-    }
-}
-
 void GameLoop::setGameState(GameState state_to_set) { GameLoop::current_state = state_to_set; }
+
+GameLoop::~GameLoop()
+{
+    delete window_manager;
+    delete event_manager;
+    delete splash_screen_manager;
+    delete gameplay_manager;
+}

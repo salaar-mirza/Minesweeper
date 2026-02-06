@@ -23,6 +23,24 @@ namespace Gameplay
         
     }
 
+    void Board::update(Event::EventPollingManager& eventManager, sf::RenderWindow& window)
+    {
+        for (int row = 0; row < numberOfRows; ++row)
+            for (int col = 0; col < numberOfColumns; ++col)
+                cell[row][col]->update(eventManager, window);
+    }
+
+    void Board::render(sf::RenderWindow& window)
+    {
+        window.draw(boardSprite);
+    
+        for (int row = 0; row < numberOfRows; ++row)
+        {
+            for (int col = 0; col < numberOfColumns; ++col)
+                cell[row][col]->render(window);
+        }
+     }
+
     void Board::initialize()
     {
         initializeBoardImage();
@@ -32,17 +50,23 @@ namespace Gameplay
 
     }
 
-    void Board::update(Event::EventPollingManager& eventManager, sf::RenderWindow& window)
-    {
-        for (int row = 0; row < numberOfRows; ++row)
-            for (int col = 0; col < numberOfColumns; ++col)
-                cell[row][col]->update(eventManager, window);
-    }
+    void Board::initializeBoardImage() {
+        if (!boardTexture.loadFromFile(boardTexturePath)) {
+            std::cout << "Failed to load board texture!\n";
+            return;
+        }
     
+        boardSprite.setTexture(boardTexture);
+        boardSprite.setPosition(boardPosition, 0);
+        boardSprite.setScale(boardWidth / boardTexture.getSize().x,
+                            boardHeight / boardTexture.getSize().y);
+    }
+
     void Board::initializeVariables()
     {
         randomEngine.seed(randomDevice()); //Function to initialize random engine
     }
+
     void Board::createBoard()
     {
         float cell_width = getCellWidthInBoard();
@@ -55,19 +79,6 @@ namespace Gameplay
                 cell[row][col] = new Cell(sf::Vector2i(col, row),cell_width, cell_height);
             }
         }
-    }
-
-    
-    void Board::initializeBoardImage() {
-        if (!boardTexture.loadFromFile(boardTexturePath)) {
-            std::cout << "Failed to load board texture!\n";
-            return;
-        }
-    
-        boardSprite.setTexture(boardTexture);
-        boardSprite.setPosition(boardPosition, 0);
-        boardSprite.setScale(boardWidth / boardTexture.getSize().x,
-                            boardHeight / boardTexture.getSize().y);
     }
 
     float Board::getCellWidthInBoard() const
@@ -147,17 +158,5 @@ namespace Gameplay
         return (cell_position.x >= 0 && cell_position.y >= 0 &&
             cell_position.x < numberOfColumns && cell_position.y < numberOfRows);
     }
-    
-
-    void Board::render(sf::RenderWindow& window)
-    {
-        window.draw(boardSprite);
-    
-        for (int row = 0; row < numberOfRows; ++row)
-        {
-            for (int col = 0; col < numberOfColumns; ++col)
-                cell[row][col]->render(window);
-        }
-     }
     
 }
