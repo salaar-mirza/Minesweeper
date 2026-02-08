@@ -42,9 +42,59 @@ namespace Gameplay
         if (!cell[cell_position.y][cell_position.x]->canOpenCell()) {
             return; // Can't open this cell!
         }
-        cell[cell_position.y][cell_position.x]->open(); // Open it!
+        processCellType(cell_position);
     }
 
+    void Board::processCellType(sf::Vector2i cell_position) {
+        switch (cell[cell_position.y][cell_position.x]->getCellType()) {
+        case CellType::EMPTY:
+            processEmptyCell(cell_position);
+            break;
+        case CellType::MINE:
+            //Handling Mine cell in next lesson
+            break;
+        default:
+            cell[cell_position.y][cell_position.x]->open();
+            break;
+        }
+    }
+
+    void Board::processEmptyCell(sf::Vector2i cell_position) {
+        CellState cell_state = cell[cell_position.y][cell_position.x]->getCellState();
+
+        // Handle the clicked cell
+        switch (cell_state) {
+        case::Gameplay::CellState::OPEN:
+            return;  // Already open, stop here
+        default:
+            cell[cell_position.y][cell_position.x]->open();
+        }
+
+        // Check all 8 neighbors
+        for (int row_offset = -1; row_offset <= 1; ++row_offset) {
+            for (int col_offset = -1; col_offset <= 1; ++col_offset) {
+                //Store neighbor cells position
+                sf::Vector2i next_cell_position = sf::Vector2i(cell_position.x + col_offset, cell_position.y + row_offset);
+
+                // Skip current cell and invalid positions
+                if ((row_offset == 0 && col_offset == 0) || !isValidCellPosition(next_cell_position)) {
+                    continue; 
+                }
+
+                //Flagged Cell Case
+                CellState next_cell_state = cell[next_cell_position.y][next_cell_position.x]->getCellState();
+
+                if (next_cell_state == CellState::FLAGGED)
+                {
+                    toggleFlag(next_cell_position);
+                }
+                
+                //Open neighbor cell
+                openCell(next_cell_position);  // Open neighbor
+            }
+        }
+    }
+    
     void Board::toggleFlag(sf::Vector2i cell_position) {
         cell[cell_position.y][cell_position.x]->toggleFlag();
         flaggedCells += (cell[cell_position.y][cell_position.x]->getCellState() == CellState::FLAGGED) ? 1 : -1;
