@@ -15,7 +15,8 @@ namespace Gameplay
 
     void GameplayManager::update(Event::EventPollingManager& eventManager, sf::RenderWindow& window)
     {
-        board->update(eventManager, window);
+        if (!hasGameEnded()) //Check if the game has ended
+            board->update(eventManager, window);
     }
 
     void GameplayManager::render(sf::RenderWindow& window)
@@ -44,8 +45,14 @@ namespace Gameplay
         board = new Board(this);
     }
 
+    bool GameplayManager::hasGameEnded() {
+        return game_result != GameResult::NONE;
+    }
+    
     void GameplayManager::setGameResult(GameResult gameResult) 
     { 
         this->game_result = gameResult; 
     }
+
+ 
 }
