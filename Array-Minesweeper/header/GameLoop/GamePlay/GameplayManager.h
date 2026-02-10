@@ -9,6 +9,13 @@ namespace Event
 
 namespace Gameplay
 {
+    enum class GameResult
+    {
+        NONE,
+        WON,
+        LOST
+    };
+    
     class GameplayManager
     {
     private:
@@ -17,20 +24,22 @@ namespace Gameplay
 	    
         sf::Texture background_texture;
         sf::Sprite background_sprite;
-
+        
         Board* board;
+
+        GameResult game_result;
         
         void initialize();
         void initializeVariables();
         void initializeBackground();
 
-
+        bool hasGameEnded();
     public:
         GameplayManager();
         ~GameplayManager();
 
         void update(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
-      
+        void setGameResult(GameResult gameResult);
 
         void render(sf::RenderWindow& window);
     };

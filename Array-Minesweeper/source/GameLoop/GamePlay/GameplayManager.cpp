@@ -41,6 +41,11 @@ namespace Gameplay
 
     void GameplayManager::initializeVariables()
     {
-        board = new Board();
+        board = new Board(this);
+    }
+
+    void GameplayManager::setGameResult(GameResult gameResult) 
+    { 
+        this->game_result = gameResult; 
     }
 }

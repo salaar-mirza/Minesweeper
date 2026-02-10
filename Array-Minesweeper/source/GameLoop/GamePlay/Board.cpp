@@ -1,15 +1,15 @@
 #include "../../header/GameLoop/Gameplay/Board.h"
 #include "../../header/GameLoop/Gameplay/Cell.h"
 #include "../../header/Sound/SoundManager.h"
+#include "../../header/GameLoop/GamePlay/GameplayManager.h"
 #include <iostream>
 
 
 namespace Gameplay
 {
-    Board::Board()
-    {
-        initialize();
-
+    Board::Board(GameplayManager* gameplayManager)
+    { 
+        initialize(gameplayManager); 
     }
 
     Board::~Board()
@@ -21,7 +21,6 @@ namespace Gameplay
                 delete cell[row][col];
             }
         }
-        
     }
 
     void Board::onCellButtonClicked(sf::Vector2i cell_position, UIElements::MouseButtonType mouse_button_type) {
@@ -51,7 +50,7 @@ namespace Gameplay
             processEmptyCell(cell_position);
             break;
         case CellType::MINE:
-            //Handling Mine cell in next lesson
+            processMineCell(cell_position);
             break;
         default:
             cell[cell_position.y][cell_position.x]->open();
@@ -94,6 +93,22 @@ namespace Gameplay
             }
         }
     }
+
+    //Handling Mine Cell
+    void Board::processMineCell(sf::Vector2i cell_position) {
+        gameplay_manager->setGameResult( GameResult::LOST);  // Game Over!
+        Sound::SoundManager::PlaySound(Sound::SoundType::EXPLOSION);
+        revealAllMines();                                   // Show all mines
+    }
+    void Board::revealAllMines() {
+        for (int row = 0; row < numberOfRows; row++) {
+            for (int col = 0; col < numberOfColumns; col++) {
+                if (cell[row][col]->getCellType() == CellType::MINE) {
+                    cell[row][col]->setCellState(CellState::OPEN);  // Show the mines
+                }
+            }
+        }
+    }
     
     void Board::toggleFlag(sf::Vector2i cell_position) {
         cell[cell_position.y][cell_position.x]->toggleFlag();
@@ -118,10 +133,10 @@ namespace Gameplay
         }
      }
 
-    void Board::initialize()
+    void Board::initialize(GameplayManager* gameplayManager)
     {
+        initializeVariables(gameplayManager);
         initializeBoardImage();
-        initializeVariables();
         createBoard(); //Call Create Board method:
         populateBoard();
 
@@ -139,8 +154,9 @@ namespace Gameplay
                             boardHeight / boardTexture.getSize().y);
     }
 
-    void Board::initializeVariables()
+    void Board::initializeVariables(GameplayManager* gameplay_manager)
     {
+        this->gameplay_manager = gameplay_manager;
         randomEngine.seed(randomDevice()); //Function to initialize random engine
     }
 

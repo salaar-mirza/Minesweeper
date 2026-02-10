@@ -8,6 +8,7 @@
 namespace Gameplay
 {
     class Cell;
+    class GameplayManager; 
 }
 namespace Event
 {
@@ -44,8 +45,11 @@ namespace Gameplay
         //Number of Mines
         static const int minesCount = 9;
 
+        GameplayManager* gameplay_manager; 
+
         void initializeBoardImage();
-        void initialize();
+        void initialize(GameplayManager* gameplay_manager);
+        void initializeVariables(GameplayManager* gameplay_manager);
 
        
         void createBoard();
@@ -56,7 +60,6 @@ namespace Gameplay
         //Populating the Board
         void populateBoard();
         void populateMines();
-        void initializeVariables();
 
         int countMinesAround(sf::Vector2i cell_position);
         void populateCells();
@@ -71,11 +74,13 @@ namespace Gameplay
         //Empty Cells
         void processEmptyCell(sf::Vector2i cell_position);
 
+        void processMineCell(sf::Vector2i cell_position);
     public:
     		
-        Board();
+        Board(GameplayManager* gameplayManager);
         ~Board();
         void onCellButtonClicked(sf::Vector2i cell_position,UIElements:: MouseButtonType mouse_button_type);
+        void revealAllMines();
 
         void update(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
         
