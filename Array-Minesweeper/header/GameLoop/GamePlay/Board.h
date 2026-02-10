@@ -17,6 +17,14 @@ namespace Event
 
 namespace Gameplay
 {
+    enum class BoardState
+    {
+        FIRST_CELL,
+        PLAYING,
+        COMPLETED,
+    };
+		
+    
     class Board
     {
     private:
@@ -37,7 +45,8 @@ namespace Gameplay
         //Randomization
         std::default_random_engine randomEngine;
         std::random_device randomDevice;
-        
+
+        BoardState boardState;
         // Board Objects
         sf::Texture boardTexture;
         sf::Sprite boardSprite;
@@ -45,7 +54,8 @@ namespace Gameplay
         //Number of Mines
         static const int minesCount = 9;
 
-        GameplayManager* gameplay_manager; 
+        GameplayManager* gameplay_manager;
+      
 
         void initializeBoardImage();
         void initialize(GameplayManager* gameplay_manager);
@@ -58,8 +68,8 @@ namespace Gameplay
         float getCellHeightInBoard() const;
 
         //Populating the Board
-        void populateBoard();
-        void populateMines();
+        void populateBoard(sf::Vector2i cell_position);
+        void populateMines(sf::Vector2i first_cell_position);
 
         int countMinesAround(sf::Vector2i cell_position);
         void populateCells();
@@ -75,12 +85,17 @@ namespace Gameplay
         void processEmptyCell(sf::Vector2i cell_position);
 
         void processMineCell(sf::Vector2i cell_position);
+        
+        bool isInvalidMinePosition(sf::Vector2i first_cell_position, int x, int y);
     public:
     		
         Board(GameplayManager* gameplayManager);
         ~Board();
         void onCellButtonClicked(sf::Vector2i cell_position,UIElements:: MouseButtonType mouse_button_type);
         void revealAllMines();
+
+        BoardState getBoardState() const;
+        void setBoardState(BoardState state);
 
         void update(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
         
