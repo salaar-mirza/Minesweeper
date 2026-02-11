@@ -218,6 +218,7 @@
       <AdditionalIncludeDirectories>D:\MyOutscal\Minesweeper\Array-Minesweeper\sfml\include;</AdditionalIncludeDirectories>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="source\UI\MainMenu\MainMenuManager.cpp" />
     <ClCompile Include="source\UI\SplashScreen\SplashScreenManager.cpp" />
     <ClCompile Include="source\Time\TimeManager.cpp" />
     <ClCompile Include="source\UI\UIElements\Button\Button.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="header\GameLoop\GamePlay\GameplayManager.h" />
     <ClInclude Include="header\GameWindow\GameWindowManager.h" />
     <ClInclude Include="header\UI\GameplayUI\GamplayUI.h" />
+    <ClInclude Include="header\UI\MainMenu\MainMenuManager.h" />
     <ClInclude Include="header\UI\SplashScreen\SplashScreenManager.h" />
     <ClInclude Include="header\Time\TimeManager.h" />
     <ClInclude Include="header\Sound\SoundManager.h" />

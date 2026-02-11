@@ -23,6 +23,11 @@ namespace Gameplay
     class GameplayManager;
     
 }
+namespace UI
+{
+    class MainMenuManager;
+}
+
 
 enum class GameState
 {
@@ -41,6 +46,7 @@ private:
     Event::EventPollingManager* event_manager;
     UI::SplashScreenManager* splash_screen_manager;
     Gameplay::GameplayManager* gameplay_manager;
+    UI::MainMenuManager* main_menu_manager;
 
     void initialize();
     void update();
