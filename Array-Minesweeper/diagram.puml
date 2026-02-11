@@ -1,25 +1,27 @@
 @startuml
 
+skinparam classAttributeIconSize 0
+skinparam packageStyle rect
+
+' ==================================
+' Packages for Namespaces
+' ==================================
+
 package GameWindow {
     class GameWindowManager {
-        - int frame_rate
-        - string game_window_title
         - int game_window_width
         - int game_window_height
+        - int frame_rate
+        - string game_window_title
+        - sf::Color window_color
         - sf::RenderWindow* game_window
         - sf::VideoMode video_mode
-        - sf::Color window_color
-        - void initialize()
-        - sf::RenderWindow* createGameWindow()
-        - void setFrameRate(int)
-        - void configureVideoMode()
-        - void onDestroy()
         + GameWindowManager()
         + ~GameWindowManager()
         + bool isGameWindowOpen()
         + sf::RenderWindow* getGameWindow()
-        + void update()
-        + void render()
+        + update()
+        + render()
     }
 }
 
@@ -35,12 +37,6 @@ package Event {
         - sf::RenderWindow* game_window
         - MouseButtonState left_mouse_button_state
         - MouseButtonState right_mouse_button_state
-        - void initializeVariables(sf::RenderWindow*)
-        - void updateMouseButtonState(MouseButtonState&, sf::Mouse::Button)
-        - bool hasQuitGame()
-        - bool isKeyboardEvent()
-        - bool isGameWindowOpen()
-        - bool gameWindowWasClosed()
         + EventPollingManager(sf::RenderWindow*)
         + ~EventPollingManager()
         + void processEvents()
@@ -55,33 +51,45 @@ package Event {
 
 package UI {
     class SplashScreenManager {
-        - sf::RenderWindow* game_window
-        - sf::Texture logo_texture
-        - sf::Sprite logo_sprite
-        - float logo_width
-        - float logo_height
         - float logo_animation_duration
-        - string logo_texture_path
         - float elapsed_time
-        - void initialize()
-        - sf::Vector2f getLogoPosition()
-        - void drawLogo()
+        - sf::RenderWindow* game_window
+        - sf::Sprite logo_sprite
         + SplashScreenManager(sf::RenderWindow*)
         + ~SplashScreenManager()
         + void update()
         + void render()
     }
+
+    class GameplayUI {
+        - sf::Text mineText
+        - sf::Text timeText
+        - UIElements.Button* restartButton
+        - Gameplay.GameplayManager* gameplay_manager
+        + GameplayUI(Gameplay.GameplayManager*)
+        + ~GameplayUI()
+        + void update(int, int, Event.EventPollingManager&, sf::RenderWindow&)
+        + void render(sf::RenderWindow&)
+        - void RestartButtonCallback(UIElements.MouseButtonType mouse_button_type)
+    }
 }
 
 package UIElements {
+    enum MouseButtonType {
+        LEFT_MOUSE_BUTTON
+        RIGHT_MOUSE_BUTTON
+    }
+
     class Button {
         - sf::Sprite buttonSprite
-        - sf::Texture button_texture
-        - void initialize(string, sf::Vector2f, float, float)
+        - std::function callback_function
         + Button(string, sf::Vector2f, float, float)
-        + void setTextureRect(sf::IntRect)
-        + void render(sf::RenderWindow&)
+        + void setTextureRect(const sf::IntRect& rect)
+        + void handleButtonInteractions(Event.EventPollingManager&, const sf::RenderWindow&)
+        + void registerCallbackFunction(std::function)
+        + void render(sf::RenderWindow&) const
     }
+    Button ..> MouseButtonType
 }
 
 package Gameplay {
@@ -90,82 +98,81 @@ package Gameplay {
         OPEN
         FLAGGED
     }
-
     enum CellType {
-        EMPTY
-        ONE
-        TWO
-        THREE
-        FOUR
-        FIVE
-        SIX
-        SEVEN
-        EIGHT
-        MINE
+        EMPTY, ONE, TWO, THREE, FOUR,
+        FIVE, SIX, SEVEN, EIGHT, MINE
+    }
+    enum BoardState {
+        FIRST_CELL
+        PLAYING
+        COMPLETED
+    }
+    enum GameResult {
+        NONE
+        WON
+        LOST
     }
 
     class Cell {
-        - float cell_top_offset
-        - float cell_left_offset
         - CellState current_cell_state
         - CellType cell_type
         - sf::Vector2i position
-        - int tile_size
-        - int slice_count
-        - string cell_texture_path
-        - UIElements::Button* cell_button
-        - void initialize(float, float, sf::Vector2i)
-        - sf::Vector2f getCellScreenPosition(float, float)
-        + Cell(float, float, sf::Vector2i)
+        - UIElements.Button* cell_button
+        - Board* board
+        + Cell(sf::Vector2i, float, float, Board*)
         + ~Cell()
-        + CellState getCellState()
-        + void setCellState(CellState)
-        + CellType getCellType()
-        + void setCellType(CellType)
-        + void setCellTexture()
+        + void update(Event.EventPollingManager&, sf::RenderWindow&)
         + void render(sf::RenderWindow&)
+        + void open()
+        + bool canOpenCell() const
+        + void toggleFlag()
+        + void reset()
+        + CellState getCellState() const
+        + void setCellState(CellState)
+        + CellType getCellType() const
+        + void setCellType(CellType)
+        + sf::Vector2i getCellPosition()
+        - void cellButtonCallback(UIElements.MouseButtonType button_type)
     }
 
     class Board {
-        - Cell* cell
-        - float boardWidth
-        - float boardHeight
-        - float boardPosition
         - {static} int numberOfRows
         - {static} int numberOfColumns
-        - float horizontalCellPadding
-        - float verticalCellPadding
-        - string boardTexturePath
-        - sf::Texture boardTexture
-        - sf::Sprite boardSprite
-        - void initializeBoardImage()
-        - void initialize()
-        - void createBoard()
-        - float getCellWidthInBoard()
-        - float getCellHeightInBoard()
-        + Board()
+        - {static} int minesCount
+        - int flaggedCells
+        - BoardState boardState
+        - Cell* cell[9][9]
+        - GameplayManager* gameplay_manager
+        + Board(GameplayManager*)
         + ~Board()
+        + void update(Event.EventPollingManager&, sf::RenderWindow&)
         + void render(sf::RenderWindow&)
+        + void onCellButtonClicked(sf::Vector2i, UIElements.MouseButtonType)
+        + void reset()
+        + bool areAllCellsOpen()
+        + void flagAllMines()
+        + int getRemainingMinesCount() const
+        + BoardState getBoardState() const
+        + void setBoardState(BoardState)
+        - void populateBoard(sf::Vector2i cell_position)
+        - void openCell(sf::Vector2i cell_position)
+        - void revealAllMines()
     }
 
     class GameplayManager {
+        - float remaining_time
         - Board* board
-        - float background_alpha
-        - sf::Texture background_texture
-        - sf::Sprite background_sprite
-        - string background_texture_path
-        - void initialize()
-        - void initializeVariables()
-        - void initializeBackground()
+        - UI.GameplayUI* gameplay_ui
+        - GameResult game_result
         + GameplayManager()
         + ~GameplayManager()
+        + void update(Event.EventPollingManager&, sf::RenderWindow&)
         + void render(sf::RenderWindow&)
+        + void restartGame()
+        + void setGameResult(GameResult)
+        - void checkGameWin()
+        - void processGameResult()
     }
-    GameplayManager *-- Board
-    Board *-- Cell
-    Cell *-- UIElements.Button
-    Cell ..> CellState
-    Cell ..> CellType
 }
 
 package Sound {
@@ -177,22 +184,8 @@ package Sound {
     }
 
     class SoundManager {
-        - {static} sf::Music backgroundMusic
-        - {static} sf::SoundBuffer bufferButtonClick
-        - {static} sf::SoundBuffer bufferFlagSound
-        - {static} sf::SoundBuffer bufferExplosion
-        - {static} sf::SoundBuffer bufferGameWon
-        - {static} sf::Sound soundEffect
-        - {static} float backgroundMusicVolume
-        - {static} string button_click_path
-        - {static} string flag_sound_path
-        - {static} string explosion_sound_path
-        - {static} string game_won_sound_path
-        - {static} string background_path
-        - {static} void LoadBackgroundMusicFromFile()
-        - {static} void LoadSoundFromFile()
         + {static} void Initialize()
-        + {static} void PlaySound(SoundType)
+        + {static} void PlaySound(SoundType soundType)
         + {static} void PlayBackgroundMusic()
     }
     SoundManager ..> SoundType
@@ -200,32 +193,16 @@ package Sound {
 
 package Time {
     class TimeManager {
-        - {static} std::chrono::time_point previous_time
         - {static} float delta_time
-        - {static} void updateDeltaTime()
-        - {static} float calculateDeltaTime()
-        - {static} void updatePreviousTime()
         + {static} void initialize()
         + {static} void update()
         + {static} float getDeltaTime()
     }
 }
 
-class GameLoop {
-    - GameWindow::GameWindowManager* window_manager
-    - Event::EventPollingManager* event_manager
-    - sf::RenderWindow* game_window
-    - UI::SplashScreenManager* splash_screen_manager
-    - Gameplay::GameplayManager* gameplay_manager
-    - {static} GameState current_state
-    - void initialize()
-    - void update()
-    - void render()
-    + GameLoop()
-    + ~GameLoop()
-    + void run()
-    + {static} void setGameState(GameState)
-}
+' ==================================
+' Central GameLoop
+' ==================================
 
 enum GameState {
     SPLASH_SCREEN
@@ -234,12 +211,49 @@ enum GameState {
     EXIT
 }
 
+class GameLoop {
+    - {static} GameState current_state
+    - sf::RenderWindow* game_window
+    - GameWindow.GameWindowManager* window_manager
+    - Event.EventPollingManager* event_manager
+    - UI.SplashScreenManager* splash_screen_manager
+    - Gameplay.GameplayManager* gameplay_manager
+    + GameLoop()
+    + ~GameLoop()
+    + void run()
+    + {static} void setGameState(GameState state_to_set)
+}
+
+' ==================================
+' Relationships
+' ==================================
+
 GameLoop *-- GameWindow.GameWindowManager : Composes
 GameLoop *-- Event.EventPollingManager : Composes
 GameLoop *-- UI.SplashScreenManager : Composes
 GameLoop *-- Gameplay.GameplayManager : Composes
+GameLoop ..> GameState : Uses
 GameLoop ..> Sound.SoundManager : Uses
 GameLoop ..> Time.TimeManager : Uses
-GameLoop ..> GameState : Uses
+
+Gameplay.GameplayManager *-- Gameplay.Board : Composes
+Gameplay.GameplayManager *-- UI.GameplayUI : Composes
+Gameplay.GameplayManager ..> Gameplay.GameResult : Uses
+
+Gameplay.Board *-- "9x9 " Gameplay.Cell : Composes
+Gameplay.Board ..> Gameplay.BoardState : Uses
+Gameplay.Board ..> UIElements.MouseButtonType : Uses
+Gameplay.Board ..> Gameplay.GameplayManager : Notifies
+
+Gameplay.Cell *-- UIElements.Button : Composes
+Gameplay.Cell ..> Gameplay.CellState : Uses
+Gameplay.Cell ..> Gameplay.CellType : Uses
+Gameplay.Cell ..> Gameplay.Board : Notifies
+
+UI.GameplayUI *-- UIElements.Button : Composes
+UI.GameplayUI ..> UIElements.MouseButtonType : Uses
+UI.GameplayUI ..> Gameplay.GameplayManager : Notifies
+
+UIElements.Button ..> Event.EventPollingManager : Uses
 
 @enduml
