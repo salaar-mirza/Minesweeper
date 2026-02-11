@@ -32,18 +32,22 @@ namespace UIElements
         return buttonSprite.getGlobalBounds().contains(static_cast<float>(mouse_position.x), static_cast<float>(mouse_position.y));
     }
 
+    void Button::registerCallbackFunction(CallbackFunction button_callback) {
+        callback_function = button_callback;
+    }
     void Button::handleButtonInteractions(Event::EventPollingManager& event_manager, const sf::RenderWindow& window) {
 
-        if (event_manager.pressedLeftMouseButton() && isMouseOnSprite(event_manager, window))
-            //handle logic
-                std::cout << "Left Click Detected" << std::endl;
-    
-        else if (event_manager.pressedRightMouseButton() && isMouseOnSprite(event_manager, window))
-            //handle logic
-                std::cout << "Right Click Detected" << std::endl;
+        if (event_manager.pressedLeftMouseButton() && isMouseOnSprite(event_manager, window)) {
+            callback_function(MouseButtonType::LEFT_MOUSE_BUTTON);
+        } 
+        else if (event_manager.pressedRightMouseButton() && isMouseOnSprite(event_manager, window)) {
+            callback_function(MouseButtonType::RIGHT_MOUSE_BUTTON);
+        }
     }
     
     void Button::render(sf::RenderWindow& window) const {
         window.draw(buttonSprite);
     }
+
+   
 }
