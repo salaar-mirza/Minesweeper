@@ -61,6 +61,21 @@ package UI {
         + void render()
     }
 
+    class MainMenuManager {
+        - sf::RenderWindow* game_window
+        - sf::Sprite background_sprite
+        - Button* play_button
+        - Button* quit_button
+        + MainMenuManager(sf::RenderWindow*)
+        + ~MainMenuManager()
+        + void update(Event.EventPollingManager&)
+        + void render()
+        - void show()
+        - void checkForButtonClicks(Event.EventPollingManager&)
+        - void playButtonCallback(UIElements.MouseButtonType)
+        - void quitButtonCallback(UIElements.MouseButtonType)
+    }
+
     class GameplayUI {
         - sf::Text mineText
         - sf::Text timeText
@@ -70,7 +85,7 @@ package UI {
         + ~GameplayUI()
         + void update(int, int, Event.EventPollingManager&, sf::RenderWindow&)
         + void render(sf::RenderWindow&)
-        - void RestartButtonCallback(UIElements.MouseButtonType mouse_button_type)
+        - void RestartButtonCallback(UIElements.MouseButtonType)
     }
 }
 
@@ -94,23 +109,17 @@ package UIElements {
 
 package Gameplay {
     enum CellState {
-        HIDDEN
-        OPEN
-        FLAGGED
+        HIDDEN, OPEN, FLAGGED
     }
     enum CellType {
         EMPTY, ONE, TWO, THREE, FOUR,
         FIVE, SIX, SEVEN, EIGHT, MINE
     }
     enum BoardState {
-        FIRST_CELL
-        PLAYING
-        COMPLETED
+        FIRST_CELL, PLAYING, COMPLETED
     }
     enum GameResult {
-        NONE
-        WON
-        LOST
+        NONE, WON, LOST
     }
 
     class Cell {
@@ -132,7 +141,7 @@ package Gameplay {
         + CellType getCellType() const
         + void setCellType(CellType)
         + sf::Vector2i getCellPosition()
-        - void cellButtonCallback(UIElements.MouseButtonType button_type)
+        - void cellButtonCallback(UIElements.MouseButtonType)
     }
 
     class Board {
@@ -154,8 +163,8 @@ package Gameplay {
         + int getRemainingMinesCount() const
         + BoardState getBoardState() const
         + void setBoardState(BoardState)
-        - void populateBoard(sf::Vector2i cell_position)
-        - void openCell(sf::Vector2i cell_position)
+        - void populateBoard(sf::Vector2i)
+        - void openCell(sf::Vector2i)
         - void revealAllMines()
     }
 
@@ -177,15 +186,12 @@ package Gameplay {
 
 package Sound {
     enum SoundType {
-        BUTTON_CLICK
-        FLAG
-        EXPLOSION
-        GAME_WON
+        BUTTON_CLICK, FLAG, EXPLOSION, GAME_WON
     }
 
     class SoundManager {
         + {static} void Initialize()
-        + {static} void PlaySound(SoundType soundType)
+        + {static} void PlaySound(SoundType)
         + {static} void PlayBackgroundMusic()
     }
     SoundManager ..> SoundType
@@ -205,10 +211,7 @@ package Time {
 ' ==================================
 
 enum GameState {
-    SPLASH_SCREEN
-    MAIN_MENU
-    GAMEPLAY
-    EXIT
+    SPLASH_SCREEN, MAIN_MENU, GAMEPLAY, EXIT
 }
 
 class GameLoop {
@@ -217,11 +220,12 @@ class GameLoop {
     - GameWindow.GameWindowManager* window_manager
     - Event.EventPollingManager* event_manager
     - UI.SplashScreenManager* splash_screen_manager
+    - UI.MainMenuManager* main_menu_manager
     - Gameplay.GameplayManager* gameplay_manager
     + GameLoop()
     + ~GameLoop()
     + void run()
-    + {static} void setGameState(GameState state_to_set)
+    + {static} void setGameState(GameState)
 }
 
 ' ==================================
@@ -231,10 +235,14 @@ class GameLoop {
 GameLoop *-- GameWindow.GameWindowManager : Composes
 GameLoop *-- Event.EventPollingManager : Composes
 GameLoop *-- UI.SplashScreenManager : Composes
+GameLoop *-- UI.MainMenuManager : Composes
 GameLoop *-- Gameplay.GameplayManager : Composes
 GameLoop ..> GameState : Uses
 GameLoop ..> Sound.SoundManager : Uses
 GameLoop ..> Time.TimeManager : Uses
+
+UI.MainMenuManager *-- "2" UIElements.Button : Composes
+UI.MainMenuManager ..> GameLoop : Notifies
 
 Gameplay.GameplayManager *-- Gameplay.Board : Composes
 Gameplay.GameplayManager *-- UI.GameplayUI : Composes
