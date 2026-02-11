@@ -7,6 +7,10 @@ namespace Event
     class EventPollingManager;
 }
 
+namespace Time
+{
+    class TimeManager;
+}
 namespace Gameplay
 {
     enum class GameResult
@@ -24,6 +28,12 @@ namespace Gameplay
 	    
         sf::Texture background_texture;
         sf::Sprite background_sprite;
+
+        //Timer
+        const float max_level_duration = 150.0f;
+        const float game_over_time = 11.0f;
+        float remaining_time;
+
         
         Board* board;
 
@@ -34,12 +44,21 @@ namespace Gameplay
         void initializeBackground();
 
         bool hasGameEnded();
+
+        void updateRemainingTime();
+        void processTimeOver();
+        void gameWon();
+        void gameLost();
+
+        void handleGameplay(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
     public:
         GameplayManager();
         ~GameplayManager();
 
         void update(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
         void setGameResult(GameResult gameResult);
+        void checkGameWin();
+        void processGameResult();
 
         void render(sf::RenderWindow& window);
     };

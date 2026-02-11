@@ -89,7 +89,7 @@ namespace Gameplay
 
         for (int row = 0; row < numberOfRows; ++row)
             for (int col = 0; col < numberOfColumns; ++col)
-                cell[row][col] = new Cell(sf::Vector2i(col, row),cell_width, cell_height, this); //pass the board as a parameter
+                cell[row][col] = new Cell(sf::Vector2i(col, row),cell_width, cell_height, this); 
     }
 
     void Board::populateBoard(sf::Vector2i cell_position)
@@ -198,9 +198,7 @@ namespace Gameplay
 
     //Handling Mine Cell
     void Board::processMineCell(sf::Vector2i cell_position) {
-        gameplay_manager->setGameResult( GameResult::LOST);  // Game Over!
-        Sound::SoundManager::PlaySound(Sound::SoundType::EXPLOSION);
-        revealAllMines();                                   // Show all mines
+       gameplay_manager->setGameResult(GameResult::LOST); // Game Over! 
     }
     void Board::revealAllMines() {
         for (int row = 0; row < numberOfRows; row++) {
@@ -268,5 +266,35 @@ namespace Gameplay
         return (cell_position.x >= 0 && cell_position.y >= 0 &&
             cell_position.x < numberOfColumns && cell_position.y < numberOfRows);
     }
-    
+
+
+    bool Board::areAllCellsOpen() {
+        int total_cells = numberOfRows * numberOfColumns;
+        int open_cells = 0;
+
+        for (int row = 0; row < numberOfRows; ++row) {
+            for (int col = 0; col < numberOfColumns; ++col) {
+                if (cell[row][col]->getCellState() == CellState::OPEN &&
+                    cell[row][col]->getCellType() != CellType::MINE) {
+                    open_cells++;
+                    }
+            }
+        }
+
+        return open_cells == (total_cells - minesCount);
+    }
+
+    void Board::flagAllMines() {
+        for (int row = 0; row < numberOfRows; ++row) {
+            for (int col = 0; col < numberOfColumns; ++col) {
+                if (cell[row][col]->getCellType() == CellType::MINE &&
+                    cell[row][col]->getCellState() != CellState::FLAGGED) {
+                    cell[row][col]->setCellState(CellState::FLAGGED);
+                    }
+            }
+        }
+    }
+
+   
+   
 }

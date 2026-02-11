@@ -16,12 +16,8 @@ namespace Event
 
 namespace Gameplay
 {
-    class Board;
-}
-
-namespace Gameplay
-{
-
+    class  Board;
+    
     enum class CellState
     {
         HIDDEN,

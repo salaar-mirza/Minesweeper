@@ -1,6 +1,7 @@
 #include "../../header/GameLoop/Gameplay/Cell.h"
-#include "../../header/GameLoop/Gameplay/Board.h"
 #include "../../header/UI/UIElements/Button/Button.h"
+#include "../../header/GameLoop/GamePlay/Board.h" 
+ #include "../../header/Event/EventPollingManager.h"
 
 
 namespace Gameplay
