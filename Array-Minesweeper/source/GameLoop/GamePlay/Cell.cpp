@@ -99,5 +99,10 @@ namespace Gameplay
             setCellState(CellState::HIDDEN);
         }
     }
+
+    void Cell::reset() {
+        current_cell_state = CellState::HIDDEN;  // Back to hidden
+        cell_type = CellType::EMPTY;            // Back to empty
+    }
     
 }

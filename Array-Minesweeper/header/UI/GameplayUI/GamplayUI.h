@@ -1,12 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "../../header/UI/UIElements/Button/Button.h"
 
 namespace Gameplay
 {
     class GameplayManager;
 }
 
-namespace UIElements { class Button; }
 namespace Event { class EventPollingManager; }
 
 namespace UI
@@ -51,7 +51,7 @@ namespace UI
 				
         //Callback System
         void registerButtonCallback();
-       // void RestartButtonCallback(UIElements::MouseButtonType mouse_button_type);
+       void RestartButtonCallback(UIElements::MouseButtonType mouse_button_type);
 
     public:
         GameplayUI(Gameplay::GameplayManager* gameplay_manager);

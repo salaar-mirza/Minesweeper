@@ -103,6 +103,7 @@ namespace Gameplay
         bool areAllCellsOpen();
         void flagAllMines();
         int getRemainingMinesCount() const;
+        void reset();
 
         
         void render(sf::RenderWindow& window);

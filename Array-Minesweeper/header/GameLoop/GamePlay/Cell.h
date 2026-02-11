@@ -85,6 +85,9 @@ namespace Gameplay
         void toggleFlag();
         
         void setCellTexture();
+
+        void reset();
+
         void render(sf::RenderWindow& window);
     };
 }
