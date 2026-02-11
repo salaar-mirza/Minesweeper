@@ -11,6 +11,11 @@ namespace Time
 {
     class TimeManager;
 }
+
+namespace UI
+{
+    class GameplayUI;
+}
 namespace Gameplay
 {
     enum class GameResult
@@ -36,6 +41,8 @@ namespace Gameplay
 
         
         Board* board;
+        UI::GameplayUI* gameplay_ui;
+
 
         GameResult game_result;
         
@@ -51,6 +58,8 @@ namespace Gameplay
         void gameLost();
 
         void handleGameplay(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
+        int getRemainingMinesCount() const;
+
     public:
         GameplayManager();
         ~GameplayManager();

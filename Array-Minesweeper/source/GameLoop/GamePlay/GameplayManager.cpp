@@ -1,6 +1,7 @@
 #include "../../header/GameLoop/Gameplay/GameplayManager.h"
 #include "../../header/Sound/SoundManager.h"
 #include "../../header/Time/TimeManager.h"
+#include  "../../header/UI/GameplayUI/GamplayUI.h"
 #include <iostream>
 
 namespace Gameplay
@@ -20,6 +21,9 @@ namespace Gameplay
             handleGameplay(eventManager, window);
         else if (board->getBoardState() != BoardState::COMPLETED)
             processGameResult();  // Handle win/loss
+        gameplay_ui->update(getRemainingMinesCount(),
+                   static_cast<int>(remaining_time),
+                   eventManager, window);
     }
    
     void GameplayManager::handleGameplay(Event::EventPollingManager& eventManager, sf::RenderWindow& window) {
@@ -63,6 +67,7 @@ namespace Gameplay
     {
         window.draw(background_sprite);
         board->render(window);
+        gameplay_ui->render(window);
     }
 
     void GameplayManager::initialize()
@@ -94,6 +99,7 @@ namespace Gameplay
     void GameplayManager::initializeVariables()
     {
         board = new Board(this);
+        gameplay_ui = new UI::GameplayUI(this); //initialize gameplay UI
         remaining_time = max_level_duration;  // Start with full time
     }
 
@@ -105,6 +111,9 @@ namespace Gameplay
     { 
         this->game_result = gameResult; 
     }
-
+    
+    int GameplayManager::getRemainingMinesCount() const {
+        return board->getRemainingMinesCount();
+    }
  
 }
