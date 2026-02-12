@@ -2,7 +2,7 @@
 
 namespace Time
 {
-    // Static variable definitions
+    // Static Variable Initialization
     std::chrono::time_point<std::chrono::steady_clock> TimeManager::previous_time;
     float TimeManager::delta_time = 0.0f;
 

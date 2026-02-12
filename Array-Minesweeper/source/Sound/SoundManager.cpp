@@ -3,20 +3,21 @@
 
 namespace Sound
 {
+    // Sound Data
+    float SoundManager::backgroundMusicVolume = 8.0f;
     std::string SoundManager::button_click_path = "assets/sounds/button_click_sound.wav";
     std::string SoundManager::flag_sound_path = "assets/sounds/flag_sound.wav";
     std::string SoundManager::explosion_sound_path = "assets/sounds/explosion_sound.wav";
     std::string SoundManager::game_won_sound_path = "assets/sounds/game_won_sound.wav";
     std::string SoundManager::background_path = "assets/sounds/background_music.mp3";
 
+    // Sound Objects
     sf::Music SoundManager::backgroundMusic;
     sf::SoundBuffer SoundManager::bufferButtonClick;
     sf::SoundBuffer SoundManager::bufferFlagSound;
     sf::SoundBuffer SoundManager::bufferExplosion;
     sf::SoundBuffer SoundManager::bufferGameWon;
     sf::Sound SoundManager::soundEffect;
-
-    float SoundManager::backgroundMusicVolume = 8.0f;
 
     void SoundManager::Initialize()
     {

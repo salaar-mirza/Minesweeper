@@ -1,9 +1,8 @@
-#include <iostream>
 #include "../../header/UI/GameplayUI/GamplayUI.h"
 #include "../../header/GameLoop/Gameplay/GameplayManager.h"
-#include "../../header/Event/EventPollingManager.h"
 #include "../../header/Sound/SoundManager.h"
-
+#include <iostream>
+#include <string>
 
 namespace UI {
 
@@ -12,9 +11,26 @@ namespace UI {
         initialize(gameplay_manager); 
     }
 
-    void GameplayUI::initialize(Gameplay::GameplayManager* gameplay_manager)
+    GameplayUI::~GameplayUI()
     {
-        this->gameplay_manager = gameplay_manager;
+        delete restartButton;
+    }
+
+    void GameplayUI::update(int remaining_mines, int remaining_time, Event::EventPollingManager& eventManager, sf::RenderWindow& window) {
+        mineText.setString(std::to_string(remaining_mines));
+        timeText.setString(std::to_string(remaining_time));
+        restartButton->handleButtonInteractions(eventManager, window);
+    }
+
+    void GameplayUI::render(sf::RenderWindow& window) {
+        window.draw(mineText);
+        window.draw(timeText);
+        restartButton->render(window);
+    }
+
+    void GameplayUI::initialize(Gameplay::GameplayManager* p_gameplay_manager)
+    {
+        this->gameplay_manager = p_gameplay_manager;
         loadFonts();
         initializeTexts();
         initializeButton();  // Initialize Restart Button
@@ -24,10 +40,10 @@ namespace UI {
     void GameplayUI::loadFonts()
     {
         if (!bubbleBobbleFont.loadFromFile("assets/fonts/bubbleBobble.ttf"))
-            std::cerr << "Error loading bubbleBobble font!" << std::endl;
+            std::cerr << "Error loading bubbleBobble font! \n";
     
         if (!dsDigibFont.loadFromFile("assets/fonts/DS_DIGIB.ttf"))
-            std::cerr << "Error loading DS_DIGIB font!" << std::endl;
+            std::cerr << "Error loading DS_DIGIB font!\n";
     }
 
     void GameplayUI::initializeTexts() {
@@ -63,20 +79,5 @@ namespace UI {
             Sound::SoundManager::PlaySound(Sound::SoundType::BUTTON_CLICK);
             gameplay_manager->restartGame();  // Restart the game
         }
-    }
-
-    void GameplayUI::update(int remaining_mines, int remaining_time, Event::EventPollingManager& eventManager, sf::RenderWindow& window) {
-        mineText.setString(std::to_string(remaining_mines));
-        timeText.setString(std::to_string(remaining_time));
-        restartButton->handleButtonInteractions(eventManager, window);
-
-
-    }
-
-    void GameplayUI::render(sf::RenderWindow& window) {
-        window.draw(mineText);
-        window.draw(timeText);
-        restartButton->render(window);
-
     }
 }

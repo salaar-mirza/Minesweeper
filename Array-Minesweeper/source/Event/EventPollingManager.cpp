@@ -27,13 +27,13 @@ namespace Event
         updateMouseButtonState(right_mouse_button_state, sf::Mouse::Right);
     }
 
-    bool EventPollingManager::pressedEscapeKey() { return game_event.key.code == sf::Keyboard::Escape; }
+    bool EventPollingManager::pressedEscapeKey() const { return game_event.key.code == sf::Keyboard::Escape; }
 
-    bool EventPollingManager::pressedLeftMouseButton() { return left_mouse_button_state == MouseButtonState::PRESSED; }
+    bool EventPollingManager::pressedLeftMouseButton() const { return left_mouse_button_state == MouseButtonState::PRESSED; }
 
-    bool EventPollingManager::pressedRightMouseButton() { return right_mouse_button_state == MouseButtonState::PRESSED; }
+    bool EventPollingManager::pressedRightMouseButton() const { return right_mouse_button_state == MouseButtonState::PRESSED; }
 
-    sf::Vector2i EventPollingManager::getMousePosition() { return sf::Mouse::getPosition(*game_window); }
+    sf::Vector2i EventPollingManager::getMousePosition() const { return sf::Mouse::getPosition(*game_window); }
 
     void EventPollingManager::initializeVariables(sf::RenderWindow* window)
     {
@@ -60,11 +60,11 @@ namespace Event
             button_state = MouseButtonState::RELEASED;
     }
 
-    bool EventPollingManager::isGameWindowOpen() { return game_window != nullptr; }
+    bool EventPollingManager::isGameWindowOpen() const { return game_window != nullptr; }
 
-    bool EventPollingManager::gameWindowWasClosed() { return game_event.type == sf::Event::Closed; }
+    bool EventPollingManager::gameWindowWasClosed() const { return game_event.type == sf::Event::Closed; }
 
-    bool EventPollingManager::hasQuitGame() { return (isKeyboardEvent() && pressedEscapeKey()); }
+    bool EventPollingManager::hasQuitGame() const { return (isKeyboardEvent() && pressedEscapeKey()); }
 
-    bool EventPollingManager::isKeyboardEvent() { return game_event.type == sf::Event::KeyPressed; }
+    bool EventPollingManager::isKeyboardEvent() const { return game_event.type == sf::Event::KeyPressed; }
 }

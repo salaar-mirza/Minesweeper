@@ -1,6 +1,6 @@
 #include "../../header/UI/SplashScreen/SplashScreenManager.h"
 #include <iostream>
-
+#include "../../header/GameWindow/GameWindowManager.h"
 #include "../../../header/GameLoop/GameLoop.h"
 #include "../../../header/Time/TimeManager.h"
 
@@ -27,7 +27,7 @@ namespace UI
         logo_sprite.setPosition(getLogoPosition());
     }
 
-    sf::Vector2f SplashScreenManager::getLogoPosition()
+    sf::Vector2f SplashScreenManager::getLogoPosition() const
     {
         float x_position = (game_window->getSize().x - logo_width) / 2.0f;
         float y_position = (game_window->getSize().y - logo_height) / 2.0f;

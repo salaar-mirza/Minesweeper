@@ -1,17 +1,18 @@
 #pragma once
-#include "../../UI/UIElements/Button/Button.h"
-
-#include <SFML/Graphics.hpp>
-
+#include "../../header/UI/UIElements/Button/Button.h"
+#include <SFML/System/Vector2.hpp>
 
 namespace UIElements
 {
-    class Button;
+    enum class MouseButtonType;
 }
-
 namespace Event
 {
     class EventPollingManager;
+}
+namespace sf
+{
+    class RenderWindow;
 }
 
 namespace Gameplay
@@ -39,9 +40,32 @@ namespace Gameplay
         MINE,
     };
     
-    
+    // Represents a single cell on the Minesweeper board.
+    // It manages its own state (hidden, open, flagged), type (mine, empty, number),
+    // and handles user interactions by notifying the parent Board.
     class Cell
     {
+    public:
+        Cell(sf::Vector2i position, float width, float height, Board* board);
+        ~Cell();
+        
+        // Core loop functions
+        void update(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
+        void render(sf::RenderWindow& window);
+
+        // Cell actions
+        void open();
+        void toggleFlag();
+        void reset();
+        bool canOpenCell() const;
+
+        // State management
+        CellState getCellState() const;
+        void setCellState(CellState state);
+        CellType getCellType() const;
+        void setCellType(CellType type);
+        sf::Vector2i getCellPosition() const;
+
     private:
         // Constants
         const float cell_top_offset = 274.f;
@@ -50,44 +74,22 @@ namespace Gameplay
         const int slice_count = 12;
         const std::string cell_texture_path = "assets/textures/cells.jpeg";
         
-        // Cell data members
+        // State Variables
         CellState current_cell_state = CellState::HIDDEN;
         CellType cell_type = CellType::EMPTY;
         sf::Vector2i position;
 
+        // Object Pointers
+        Board* board;
         UIElements::Button* cell_button;
 
-        Board* board;
-
+        // Internal helpers
         void initialize(sf::Vector2i position, float width, float height, Board* board);
-
-        void registerCellButtonCallback();
-        void cellButtonCallback(UIElements::MouseButtonType button_type);
-
+        void setCellTexture();
         sf::Vector2f getCellScreenPosition(float width,float height) const;
 
-    public:
-        Cell(sf::Vector2i position, float width, float height, Board* board);
-        ~Cell();
-        
-        void update(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
-
-        //Getters, Setters
-        CellState getCellState() const;
-        sf::Vector2i getCellPosition();
-        void setCellState(CellState state);
-        CellType getCellType() const;
-        void setCellType(CellType type);
-
-        bool canOpenCell() const;
-        void open();
-
-        void toggleFlag();
-        
-        void setCellTexture();
-
-        void reset();
-
-        void render(sf::RenderWindow& window);
+        // Callback system
+        void registerCellButtonCallback();
+        void cellButtonCallback(UIElements::MouseButtonType button_type);
     };
 }

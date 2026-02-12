@@ -1,5 +1,7 @@
 #include "../../header/UI/UIElements/Button/Button.h"
+#include "../../header/GameWindow/GameWindowManager.h"
 #include  "../../header/Event/EventPollingManager.h"
+
 #include <iostream>
 
 namespace UIElements 
@@ -10,7 +12,7 @@ namespace UIElements
 
     void Button::initialize(const std::string& texturePath, const sf::Vector2f& position, float width, float height) {
         if (!button_texture.loadFromFile(texturePath)) {
-            std::cerr << "Failed to load button texture: " << texturePath << std::endl;
+            std::cerr << "Failed to load button texture: " << texturePath <<"\n";
             return;
         }
         buttonSprite.setTexture(button_texture);
@@ -23,7 +25,7 @@ namespace UIElements
         buttonSprite.setTextureRect(rect);
     }
 
-    bool Button::isMouseOnSprite(Event::EventPollingManager& event_manager, const sf::RenderWindow& window)
+    bool Button::isMouseOnSprite(const Event::EventPollingManager& event_manager, const sf::RenderWindow& window) const
     {
         //Get the position of the mouse
         sf::Vector2i mouse_position = event_manager.getMousePosition();
@@ -35,7 +37,7 @@ namespace UIElements
     void Button::registerCallbackFunction(CallbackFunction button_callback) {
         callback_function = button_callback;
     }
-    void Button::handleButtonInteractions(Event::EventPollingManager& event_manager, const sf::RenderWindow& window) {
+    void Button::handleButtonInteractions(const Event::EventPollingManager& event_manager, const sf::RenderWindow& window) {
 
         if (event_manager.pressedLeftMouseButton() && isMouseOnSprite(event_manager, window)) {
             callback_function(MouseButtonType::LEFT_MOUSE_BUTTON);
