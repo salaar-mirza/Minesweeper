@@ -102,6 +102,9 @@ namespace Gameplay
         void update(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
         bool areAllCellsOpen();
         void flagAllMines();
+        int getRemainingMinesCount() const;
+        void reset();
+
         
         void render(sf::RenderWindow& window);
     };

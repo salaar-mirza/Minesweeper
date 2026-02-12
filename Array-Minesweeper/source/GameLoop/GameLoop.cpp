@@ -5,6 +5,7 @@
 #include "../../header/Sound/SoundManager.h"
 #include "../../header/Time/TimeManager.h"
 #include "../../header/UI/SplashScreen/SplashScreenManager.h"
+#include "../../header/UI/MainMenu/MainMenuManager.h"
 #include  "../../header/GameLoop/GamePlay/GameplayManager.h"
 
 GameState GameLoop::current_state = GameState::SPLASH_SCREEN;
@@ -18,7 +19,9 @@ void GameLoop::initialize()
     game_window = window_manager->getGameWindow();
     event_manager = new Event::EventPollingManager(game_window);
     splash_screen_manager = new UI::SplashScreenManager(game_window);
+    main_menu_manager = new UI::MainMenuManager(game_window);
     gameplay_manager = new Gameplay::GameplayManager();
+    
 
 
     // Initialize Sounds:
@@ -51,18 +54,16 @@ void GameLoop::update()
         splash_screen_manager->update();
         break;
     case GameState::MAIN_MENU:
-        std::cout<<"Will update the State Soon\n";
+        main_menu_manager->update(*event_manager); 
         break;
     case GameState::GAMEPLAY:
-        gameplay_manager->update(*event_manager, *game_window); //update gameplay_manager
+        gameplay_manager->update(*event_manager, *game_window); 
         break;
         break;
     case GameState::EXIT:
         game_window->close();
         break;
-    /*default:
-        std::cout << "Error: Unknown Game State in update!\n";
-        break;*/
+  
     }
 
 }
@@ -78,7 +79,7 @@ void GameLoop::render()
         splash_screen_manager->render();
         break;
     case GameState::MAIN_MENU:
-        std::cout<<"Will render the State Soon\n";
+        main_menu_manager->render(); 
         break;
     case GameState::GAMEPLAY:
         gameplay_manager->render(*game_window);
@@ -100,5 +101,6 @@ GameLoop::~GameLoop()
     delete window_manager;
     delete event_manager;
     delete splash_screen_manager;
+    delete main_menu_manager; 
     delete gameplay_manager;
 }
