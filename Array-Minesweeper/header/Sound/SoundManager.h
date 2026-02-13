@@ -12,8 +12,20 @@ namespace Sound
         GAME_WON
     };
 
+    // A static utility class for loading and playing all game sounds and music.
+    // It provides a simple interface to play sound effects by type and manage background music.
     class SoundManager
     {
+    public:
+        // Initializes all sound buffers and background music. Should be called once at game startup.
+        static void Initialize();
+
+        // Plays a specific sound effect based on its type.
+        static void PlaySound(SoundType soundType);
+
+        // Starts playing the background music on a loop.
+        static void PlayBackgroundMusic();
+
     private:
         // Sound Data
         static float backgroundMusicVolume;
@@ -31,13 +43,7 @@ namespace Sound
         static sf::SoundBuffer bufferGameWon;
         static sf::Sound soundEffect;
 
-    public:
-        // Initialization and loading functions
-        static void Initialize();
-        static void PlaySound(SoundType soundType);
-        static void PlayBackgroundMusic();
-
-    private:
+        // Private helper methods for initialization
         static void LoadBackgroundMusicFromFile();
         static void LoadSoundFromFile();
     };

@@ -4,7 +4,6 @@
 #include "../../header/GameLoop/GamePlay/GameplayManager.h"
 #include <iostream>
 
-
 namespace Gameplay
 {
     Board::Board(GameplayManager* gameplayManager)
@@ -15,7 +14,7 @@ namespace Gameplay
     Board::~Board()
     {
         for (int row = 0; row < numberOfRows; ++row)
-            {
+        {
             for (int col = 0; col < numberOfColumns; ++col)
             {
                 delete cell[row][col];
@@ -39,7 +38,7 @@ namespace Gameplay
             for (int col = 0; col < numberOfColumns; ++col)
                 cell[row][col]->render(window);
         }
-     }
+    }
 
     void Board::onCellButtonClicked(sf::Vector2i cell_position, UIElements::MouseButtonType mouse_button_type) {
         if (mouse_button_type == UIElements::MouseButtonType::LEFT_MOUSE_BUTTON) {
@@ -52,7 +51,58 @@ namespace Gameplay
             Sound::SoundManager::PlaySound(Sound::SoundType::FLAG);//play flag sound
             toggleFlag(cell_position);
         }
+    }
 
+    void Board::reset() {
+        for (int row = 0; row < numberOfRows; ++row) {
+            for (int col = 0; col < numberOfColumns; ++col) {
+                cell[row][col]->reset();  // Reset each cell
+            }
+        }
+
+        flaggedCells = 0;  // No flags placed
+        boardState = BoardState::FIRST_CELL;  // Ready for first click
+    }
+
+    bool Board::areAllCellsOpen() {
+        int total_cells = numberOfRows * numberOfColumns;
+        int open_cells = 0;
+
+        for (int row = 0; row < numberOfRows; ++row) {
+            for (int col = 0; col < numberOfColumns; ++col) {
+                if (cell[row][col]->getCellState() == CellState::OPEN &&
+                    cell[row][col]->getCellType() != CellType::MINE) {
+                    open_cells++;
+                }
+            }
+        }
+
+        return open_cells == (total_cells - minesCount);
+    }
+
+    void Board::flagAllMines() {
+        for (int row = 0; row < numberOfRows; ++row) {
+            for (int col = 0; col < numberOfColumns; ++col) {
+                if (cell[row][col]->getCellType() == CellType::MINE &&
+                    cell[row][col]->getCellState() != CellState::FLAGGED) {
+                    cell[row][col]->setCellState(CellState::FLAGGED);
+                }
+            }
+        }
+    }
+
+    int Board::getRemainingMinesCount() const {
+        return minesCount - flaggedCells;  // Unflagged mines remaining
+    }
+
+    BoardState Board::getBoardState() const
+    {
+        return boardState;
+    }
+
+    void Board::setBoardState(BoardState state)
+    {
+        boardState = state;
     }
 
     void Board::initialize(GameplayManager* gameplayManager)
@@ -60,7 +110,6 @@ namespace Gameplay
         initializeVariables(gameplayManager);
         initializeBoardImage();
         createBoard(); 
-
     }
 
     void Board::initializeVariables(GameplayManager* gameplay_manager)
@@ -121,7 +170,6 @@ namespace Gameplay
                 ++mines_placed;
             }
         }
-   
     }
 
     void Board::populateCells()
@@ -200,6 +248,7 @@ namespace Gameplay
     void Board::processMineCell(sf::Vector2i cell_position) {
        gameplay_manager->setGameResult(GameResult::LOST); // Game Over! 
     }
+
     void Board::revealAllMines() {
         for (int row = 0; row < numberOfRows; row++) {
             for (int col = 0; col < numberOfColumns; col++) {
@@ -215,16 +264,6 @@ namespace Gameplay
         flaggedCells += (cell[cell_position.y][cell_position.x]->getCellState() == CellState::FLAGGED) ? 1 : -1;
     }
 
-    BoardState Board::getBoardState() const 
-    { 
-        return boardState; 
-    }
-
-    void Board::setBoardState(BoardState state) 
-    { 
-        boardState = state; 
-    }
-
     float Board::getCellWidthInBoard() const
     {
         return (boardWidth - horizontalCellPadding) / numberOfColumns;
@@ -235,12 +274,12 @@ namespace Gameplay
         return (boardHeight - verticalCellPadding) / numberOfRows;
     }
 
-    bool Board::isInvalidMinePosition(sf::Vector2i first_cell_position, int x, int y) {
+    bool Board::isInvalidMinePosition(sf::Vector2i first_cell_position, int x, int y) const {
         return (x == first_cell_position.x && y == first_cell_position.y) ||
                cell[y][x]->getCellType() == CellType::MINE;
     }
 
-    int Board::countMinesAround(sf::Vector2i cell_position) { // cell_position is (x,y) -> (col, row)
+    int Board::countMinesAround(sf::Vector2i cell_position) const { // cell_position is (x,y) -> (col, row)
         // local variable to keep track of cell value
         int mines_around = 0;
         
@@ -261,53 +300,9 @@ namespace Gameplay
         return mines_around;
     }
 
-    bool Board::isValidCellPosition(sf::Vector2i cell_position) // cell_position is (x,y) -> (col, row)
+    bool Board::isValidCellPosition(sf::Vector2i cell_position) const // cell_position is (x,y) -> (col, row)
     {
         return (cell_position.x >= 0 && cell_position.y >= 0 &&
             cell_position.x < numberOfColumns && cell_position.y < numberOfRows);
     }
-
-
-    bool Board::areAllCellsOpen() {
-        int total_cells = numberOfRows * numberOfColumns;
-        int open_cells = 0;
-
-        for (int row = 0; row < numberOfRows; ++row) {
-            for (int col = 0; col < numberOfColumns; ++col) {
-                if (cell[row][col]->getCellState() == CellState::OPEN &&
-                    cell[row][col]->getCellType() != CellType::MINE) {
-                    open_cells++;
-                    }
-            }
-        }
-
-        return open_cells == (total_cells - minesCount);
-    }
-
-    void Board::flagAllMines() {
-        for (int row = 0; row < numberOfRows; ++row) {
-            for (int col = 0; col < numberOfColumns; ++col) {
-                if (cell[row][col]->getCellType() == CellType::MINE &&
-                    cell[row][col]->getCellState() != CellState::FLAGGED) {
-                    cell[row][col]->setCellState(CellState::FLAGGED);
-                    }
-            }
-        }
-    }
-
-    int Board::getRemainingMinesCount() const {
-        return minesCount - flaggedCells;  // Unflagged mines remaining
-    }
-
-    void Board::reset() {
-        for (int row = 0; row < numberOfRows; ++row) {
-            for (int col = 0; col < numberOfColumns; ++col) {
-                cell[row][col]->reset();  // Reset each cell
-            }
-        }
-
-        flaggedCells = 0;  // No flags placed
-        boardState = BoardState::FIRST_CELL;  // Ready for first click
-    }
-   
 }

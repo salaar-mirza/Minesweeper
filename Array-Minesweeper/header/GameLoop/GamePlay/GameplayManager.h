@@ -1,23 +1,19 @@
 #pragma once
-#include "../../header/GameLoop/Gameplay/Board.h"
 #include <SFML/Graphics.hpp>
 
 namespace Event
 {
     class EventPollingManager;
 }
-
-namespace Time
-{
-    class TimeManager;
-}
-
 namespace UI
 {
     class GameplayUI;
 }
+
 namespace Gameplay
 {
+    class Board; // Forward-declaration
+
     enum class GameResult
     {
         NONE,
@@ -25,51 +21,55 @@ namespace Gameplay
         LOST
     };
     
+    // Manages the entire gameplay state, including the board, UI, timer, and win/loss conditions.
+    // It acts as the central hub for all in-game logic.
     class GameplayManager
     {
-    private:
-        const float background_alpha = 85.f;
-        std::string background_texture_path = "assets/textures/minesweeper_bg.png";
-	    
-        sf::Texture background_texture;
-        sf::Sprite background_sprite;
+    public:
+        GameplayManager();
+        ~GameplayManager();
 
-        //Timer
+        // Core game loop functions
+        void update(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
+        void render(sf::RenderWindow& window);
+
+        // Public API for game state management
+        void restartGame();
+        void setGameResult(GameResult gameResult);
+
+    private:
+        // Constants
+        const float background_alpha = 85.f;
         const float max_level_duration = 150.0f;
         const float game_over_time = 11.0f;
+        std::string background_texture_path = "assets/textures/minesweeper_bg.png";
+	    
+        // State Variables
         float remaining_time;
+        GameResult game_result;
 
-        
+        // Object Pointers
         Board* board;
         UI::GameplayUI* gameplay_ui;
-
-
-        GameResult game_result;
+        sf::Texture background_texture;
+        sf::Sprite background_sprite;
         
+        // Initialization methods
         void initialize();
         void initializeVariables();
         void initializeBackground();
 
-        bool hasGameEnded();
-
+        // Game logic methods
+        void handleGameplay(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
+        void checkGameWin();
+        void processGameResult();
         void updateRemainingTime();
         void processTimeOver();
         void gameWon();
         void gameLost();
 
-        void handleGameplay(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
+        bool hasGameEnded() const;
+        // Gets the number of mines left to be flagged.
         int getRemainingMinesCount() const;
-
-    public:
-        GameplayManager();
-        ~GameplayManager();
-
-        void update(Event::EventPollingManager& eventManager, sf::RenderWindow& window);
-        void setGameResult(GameResult gameResult);
-        void checkGameWin();
-        void processGameResult();
-        void restartGame();
-
-        void render(sf::RenderWindow& window);
     };
 }

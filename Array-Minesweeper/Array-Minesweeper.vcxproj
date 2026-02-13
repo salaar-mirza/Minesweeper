@@ -237,6 +237,11 @@
     <ClInclude Include="header\Sound\SoundManager.h" />
     <ClInclude Include="header\UI\UIElements\Button\Button.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Minesweeper_Core_Logic.md" />
+    <Content Include="README.md" />
+    <Content Include="Unity_Architecture_Guidelines.md" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

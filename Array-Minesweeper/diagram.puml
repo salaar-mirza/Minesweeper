@@ -18,8 +18,8 @@ package GameWindow {
         - sf::VideoMode video_mode
         + GameWindowManager()
         + ~GameWindowManager()
-        + bool isGameWindowOpen()
-        + sf::RenderWindow* getGameWindow()
+        + bool isGameWindowOpen() const
+        + sf::RenderWindow* getGameWindow() const
         + update()
         + render()
     }
@@ -41,10 +41,10 @@ package Event {
         + ~EventPollingManager()
         + void processEvents()
         + void update()
-        + bool pressedEscapeKey()
-        + bool pressedLeftMouseButton()
-        + bool pressedRightMouseButton()
-        + sf::Vector2i getMousePosition()
+        + bool pressedEscapeKey() const
+        + bool pressedLeftMouseButton() const
+        + bool pressedRightMouseButton() const
+        + sf::Vector2i getMousePosition() const
     }
     EventPollingManager ..> MouseButtonState
 }
@@ -59,6 +59,7 @@ package UI {
         + ~SplashScreenManager()
         + void update()
         + void render()
+        - sf::Vector2f getLogoPosition() const
     }
 
     class MainMenuManager {
@@ -74,6 +75,7 @@ package UI {
         - void checkForButtonClicks(Event.EventPollingManager&)
         - void playButtonCallback(UIElements.MouseButtonType)
         - void quitButtonCallback(UIElements.MouseButtonType)
+        - sf::Vector2f getButtonPosition(float, float) const
     }
 
     class GameplayUI {
@@ -85,6 +87,7 @@ package UI {
         + ~GameplayUI()
         + void update(int, int, Event.EventPollingManager&, sf::RenderWindow&)
         + void render(sf::RenderWindow&)
+        - void initialize(Gameplay.GameplayManager*)
         - void RestartButtonCallback(UIElements.MouseButtonType)
     }
 }
@@ -140,7 +143,7 @@ package Gameplay {
         + void setCellState(CellState)
         + CellType getCellType() const
         + void setCellType(CellType)
-        + sf::Vector2i getCellPosition()
+        + sf::Vector2i getCellPosition() const
         - void cellButtonCallback(UIElements.MouseButtonType)
     }
 
@@ -163,9 +166,24 @@ package Gameplay {
         + int getRemainingMinesCount() const
         + BoardState getBoardState() const
         + void setBoardState(BoardState)
+        - void initialize(GameplayManager*)
+        - void initializeVariables(GameplayManager*)
+        - void initializeBoardImage()
+        - void createBoard()
         - void populateBoard(sf::Vector2i)
+        - void populateMines(sf::Vector2i)
+        - void populateCells()
+        - int countMinesAround(sf::Vector2i) const
         - void openCell(sf::Vector2i)
+        - void toggleFlag(sf::Vector2i)
+        - void processCellType(sf::Vector2i)
+        - void processEmptyCell(sf::Vector2i)
+        - void processMineCell(sf::Vector2i)
         - void revealAllMines()
+        - float getCellWidthInBoard() const
+        - float getCellHeightInBoard() const
+        - bool isValidCellPosition(sf::Vector2i) const
+        - bool isInvalidMinePosition(sf::Vector2i, int, int) const
     }
 
     class GameplayManager {
@@ -179,8 +197,18 @@ package Gameplay {
         + void render(sf::RenderWindow&)
         + void restartGame()
         + void setGameResult(GameResult)
+        - void initialize()
+        - void initializeVariables()
+        - void initializeBackground()
+        - void handleGameplay(Event.EventPollingManager&, sf::RenderWindow&)
         - void checkGameWin()
         - void processGameResult()
+        - void updateRemainingTime()
+        - void processTimeOver()
+        - void gameWon()
+        - void gameLost()
+        - bool hasGameEnded() const
+        - int getRemainingMinesCount() const
     }
 }
 
@@ -242,7 +270,7 @@ GameLoop ..> Sound.SoundManager : Uses
 GameLoop ..> Time.TimeManager : Uses
 
 UI.MainMenuManager *-- "2" UIElements.Button : Composes
-UI.MainMenuManager ..> GameLoop : Notifies
+UI.MainMenuManager ..> GameLoop : Notifies (Circular)
 
 Gameplay.GameplayManager *-- Gameplay.Board : Composes
 Gameplay.GameplayManager *-- UI.GameplayUI : Composes
@@ -251,17 +279,21 @@ Gameplay.GameplayManager ..> Gameplay.GameResult : Uses
 Gameplay.Board *-- "9x9 " Gameplay.Cell : Composes
 Gameplay.Board ..> Gameplay.BoardState : Uses
 Gameplay.Board ..> UIElements.MouseButtonType : Uses
-Gameplay.Board ..> Gameplay.GameplayManager : Notifies
+Gameplay.Board ..> Gameplay.GameplayManager : Notifies (Circular)
 
 Gameplay.Cell *-- UIElements.Button : Composes
 Gameplay.Cell ..> Gameplay.CellState : Uses
 Gameplay.Cell ..> Gameplay.CellType : Uses
-Gameplay.Cell ..> Gameplay.Board : Notifies
+Gameplay.Cell ..> Gameplay.Board : Notifies (Circular)
 
 UI.GameplayUI *-- UIElements.Button : Composes
 UI.GameplayUI ..> UIElements.MouseButtonType : Uses
-UI.GameplayUI ..> Gameplay.GameplayManager : Notifies
+UI.GameplayUI ..> Gameplay.GameplayManager : Notifies (Circular)
 
 UIElements.Button ..> Event.EventPollingManager : Uses
+
+' Layout Helpers to force vertical hierarchy
+Gameplay.GameplayManager -[hidden]down- Gameplay.Board
+Gameplay.Board -[hidden]down- Gameplay.Cell
 
 @enduml

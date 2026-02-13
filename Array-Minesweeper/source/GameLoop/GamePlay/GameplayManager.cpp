@@ -2,6 +2,7 @@
 #include "../../header/Sound/SoundManager.h"
 #include "../../header/Time/TimeManager.h"
 #include  "../../header/UI/GameplayUI/GamplayUI.h"
+#include  "../../header/GameLoop/GamePlay/Board.h"
 #include <iostream>
 
 namespace Gameplay
@@ -14,6 +15,7 @@ namespace Gameplay
     GameplayManager::~GameplayManager()
     {
         delete board;
+        delete gameplay_ui;
     }
 
     void GameplayManager::update(Event::EventPollingManager& eventManager, sf::RenderWindow& window) {
@@ -26,6 +28,47 @@ namespace Gameplay
                    eventManager, window);
     }
    
+    void GameplayManager::render(sf::RenderWindow& window)
+    {
+        window.draw(background_sprite);
+        board->render(window);
+        gameplay_ui->render(window);
+    }
+
+    void GameplayManager::restartGame() {
+        game_result = GameResult::NONE;  // Clear previous result
+        board->reset();  // Reset the board
+        Time::TimeManager::initialize();  // Reset timer
+        remaining_time = max_level_duration;  // Full time again
+    }
+
+    void GameplayManager::setGameResult(GameResult gameResult) 
+    { 
+        this->game_result = gameResult; 
+    }
+
+    void GameplayManager::initialize()
+    {
+        initializeBackground();
+        initializeVariables();
+    }
+
+    void GameplayManager::initializeVariables()
+    {
+        board = new Board(this);
+        gameplay_ui = new UI::GameplayUI(this); //initialize gameplay UI
+        remaining_time = max_level_duration;  // Start with full time
+    }
+
+    void GameplayManager::initializeBackground()
+    {
+        if (!background_texture.loadFromFile(background_texture_path)) {
+            std::cerr << "Failed to load background texture!\n";
+        }
+        background_sprite.setTexture(background_texture);
+        background_sprite.setColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(background_alpha)));
+    }
+
     void GameplayManager::handleGameplay(Event::EventPollingManager& eventManager, sf::RenderWindow& window) {
         updateRemainingTime();              // Update timer first
         board->update(eventManager, window); // Then update board
@@ -62,20 +105,6 @@ namespace Gameplay
         board->revealAllMines();  // Show where the mines were
     }
 
-    
-    void GameplayManager::render(sf::RenderWindow& window)
-    {
-        window.draw(background_sprite);
-        board->render(window);
-        gameplay_ui->render(window);
-    }
-
-    void GameplayManager::initialize()
-    {
-        initializeBackground();
-        initializeVariables();
-    }
-
     void GameplayManager::updateRemainingTime() {
         remaining_time -= Time::TimeManager::getDeltaTime();  // Decrease time
         processTimeOver();  // Check if time's up
@@ -87,39 +116,12 @@ namespace Gameplay
             game_result = GameResult::LOST; // Game over!
         }
     }
-    void GameplayManager::initializeBackground()
-    {
-        if (!background_texture.loadFromFile(background_texture_path)) {
-            std::cerr << "Failed to load background texture!\n";
-        }
-        background_sprite.setTexture(background_texture);
-        background_sprite.setColor(sf::Color(255, 255, 255, background_alpha));
-    }
 
-    void GameplayManager::initializeVariables()
-    {
-        board = new Board(this);
-        gameplay_ui = new UI::GameplayUI(this); //initialize gameplay UI
-        remaining_time = max_level_duration;  // Start with full time
-    }
-
-    bool GameplayManager::hasGameEnded() {
+    bool GameplayManager::hasGameEnded() const {
         return game_result != GameResult::NONE;
-    }
-    
-    void GameplayManager::setGameResult(GameResult gameResult) 
-    { 
-        this->game_result = gameResult; 
     }
     
     int GameplayManager::getRemainingMinesCount() const {
         return board->getRemainingMinesCount();
-    }
-
-    void GameplayManager::restartGame() {
-        game_result = GameResult::NONE;  // Clear previous result
-        board->reset();  // Reset the board
-        Time::TimeManager::initialize();  // Reset timer
-        remaining_time = max_level_duration;  // Full time again
     }
 }

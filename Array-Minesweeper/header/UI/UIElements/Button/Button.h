@@ -1,22 +1,18 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/Rect.hpp>
 #include <functional>
-
-
+#include <string>
 
 namespace Event
 {
     class EventPollingManager;
 }
-
-namespace Sound
+namespace sf
 {
-    class SoundManager;
-}
-
-namespace Gameplay
-{
-    class Cell;
+    class RenderWindow;
 }
 
 namespace UIElements {
@@ -27,34 +23,29 @@ namespace UIElements {
         RIGHT_MOUSE_BUTTON
     };
     
+    // A reusable UI button class that can be configured with a texture and a callback function.
+    // It handles mouse interactions and invokes the callback when clicked.
     class Button {
-    private:
-        
-        sf::Texture button_texture;
-        sf::Sprite buttonSprite;
-
-        //callback function with a parameter of MouseButtonType
-        using CallbackFunction = std::function<void(MouseButtonType)>;
-        CallbackFunction callback_function = nullptr;
-
-        void initialize(const std::string& texture_path, const sf::Vector2f& position, float width, float height);
-        
-        bool isMouseOnSprite(Event::EventPollingManager& event_manager, const sf::RenderWindow& window);
-
-
     public:
         Button(const std::string& texture_path, const sf::Vector2f& position, float width, float height);
 
-        
+        // Configuration
         void setTextureRect(const sf::IntRect& rect);
-        
-        void handleButtonInteractions(Event::EventPollingManager& event_manager, const sf::RenderWindow& window);
-        
+        using CallbackFunction = std::function<void(MouseButtonType)>;
         void registerCallbackFunction(CallbackFunction button_callback);
         
+        // Core Logic & Rendering
+        void handleButtonInteractions(const Event::EventPollingManager& event_manager, const sf::RenderWindow& window);
         void render(sf::RenderWindow& window) const;
 
-   
+    private:
+        sf::Texture button_texture;
+        sf::Sprite buttonSprite;
 
+        CallbackFunction callback_function = nullptr;
+
+        // Internal helpers
+        void initialize(const std::string& texture_path, const sf::Vector2f& position, float width, float height);
+        bool isMouseOnSprite(const Event::EventPollingManager& event_manager, const sf::RenderWindow& window) const;
     };
 }

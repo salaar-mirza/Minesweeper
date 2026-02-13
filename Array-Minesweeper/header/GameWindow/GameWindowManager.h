@@ -3,8 +3,23 @@
 
 namespace GameWindow
 {
+	// Manages the creation, lifecycle, and properties of the main SFML game window.
+	// This class is responsible for initializing the window with the correct
+	// resolution, title, and frame rate.
 	class GameWindowManager
 	{
+	public:
+		GameWindowManager();
+		~GameWindowManager();
+
+		// Core loop functions
+		void update();
+		void render();
+
+		// State query functions
+		bool isGameWindowOpen() const;
+		sf::RenderWindow* getGameWindow() const;
+
 	private:
 		// We avoid using 'const' for member variables. Using 'const' on data members
 		// can make the class non-assignable (by deleting the copy-assignment operator),
@@ -14,7 +29,7 @@ namespace GameWindow
 		int game_window_width = 1920;
 		int game_window_height = 1080;
 		int frame_rate = 60;
-		std::string game_window_title = "Outscal Presents - Minesweeper";
+		std::string game_window_title = "Salaar Mirza Presents - Minesweeper";
 		sf::Color window_color = sf::Color(200, 200, 0, 255);
 
 		sf::RenderWindow* game_window;
@@ -25,15 +40,5 @@ namespace GameWindow
 		void setFrameRate(int);
 		void configureVideoMode();
 		void onDestroy();
-
-	public:
-		GameWindowManager();
-		~GameWindowManager();
-
-		bool isGameWindowOpen();
-		sf::RenderWindow* getGameWindow();
-
-		void update();
-		void render();
 	};
 }

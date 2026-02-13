@@ -6,9 +6,9 @@ namespace GameWindow
 
 	GameWindowManager::~GameWindowManager() { onDestroy(); }
 
-	bool GameWindowManager::isGameWindowOpen() { return game_window->isOpen(); }
+	bool GameWindowManager::isGameWindowOpen() const { return game_window->isOpen(); }
 
-	sf::RenderWindow* GameWindowManager::getGameWindow() { return game_window; }
+	sf::RenderWindow* GameWindowManager::getGameWindow() const { return game_window; }
 
 	void GameWindowManager::update() { }
 

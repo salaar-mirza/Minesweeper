@@ -1,6 +1,10 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Color.hpp>
 #include "../../header/UI/UIElements/Button/Button.h"
+
+namespace sf { class RenderWindow; }
 
 namespace Gameplay
 {
@@ -12,52 +16,49 @@ namespace Event { class EventPollingManager; }
 namespace UI
 {
     class GameplayUI {
+    public:
+        GameplayUI(Gameplay::GameplayManager* gameplay_manager);
+        ~GameplayUI();
+
+        void update(int remaining_mines, int remaining_time, Event::EventPollingManager& eventManager, sf::RenderWindow& window);
+        void render(sf::RenderWindow& window);
+
     private:
+        // Constants
+         static constexpr const char* restartButtonTexturePath = "assets/textures/restart_button.png";
+         static constexpr int fontSize = 110;
+         sf::Color textColor = sf::Color::Red;
+
+         static constexpr float mineTextTopOffset = 65.f;
+         static constexpr float mineTextLeftOffset = 660.f;
+
+         static constexpr float timeTextTopOffset = 65.f;
+         static constexpr float timeTextLeftOffset = 1090.f;
+
+         static constexpr float restartButtonTopOffset = 100.f;
+         static constexpr float restartButtonLeftOffset = 920.f;
+
+         static constexpr float buttonWidth = 80.f;
+         static constexpr float buttonHeight = 80.f;
+
+        // Assets & UI Elements
         sf::Font bubbleBobbleFont;
         sf::Font dsDigibFont;
-
-        // Text elements
         sf::Text mineText;
         sf::Text timeText;
-
-        // Button element
         UIElements::Button* restartButton = nullptr;
-        bool restartButtonClicked = false;
 
-        // Constants
-        const std::string restartButtonTexturePath = "assets/textures/restart_button.png";
-        const int fontSize = 110;
-
-        const float mineTextTopOffset = 65.f;
-        const float mineTextLeftOffset = 660.f;
-
-        const float timeTextTopOffset = 65.f;
-        const float timeTextLeftOffset = 1090.f;
-
-        const float restartButtonTopOffset = 100.f;
-        const float restartButtonLeftOffset = 920.f;
-
-        const float buttonWidth = 80.f;
-        const float buttonHeight = 80.f;
-        const sf::Color textColor = sf::Color::Red;
-
+        // Object Pointers
         Gameplay::GameplayManager* gameplay_manager;
         
-        // Private methods for initialization
-        void initialize(Gameplay::GameplayManager* gameplay_manager);
+        // Initialization
+        void initialize(Gameplay::GameplayManager* p_gameplay_manager);
         void initializeTexts();
         void initializeButton();
         void loadFonts();
 				
-        //Callback System
+        // Callback System
         void registerButtonCallback();
        void RestartButtonCallback(UIElements::MouseButtonType mouse_button_type);
-
-    public:
-        GameplayUI(Gameplay::GameplayManager* gameplay_manager);
-        ~GameplayUI() = default;
-
-        void update(int remaining_mines, int remaining_time, Event::EventPollingManager& eventManager, sf::RenderWindow& window);
-        void render(sf::RenderWindow& window);
     };
 }

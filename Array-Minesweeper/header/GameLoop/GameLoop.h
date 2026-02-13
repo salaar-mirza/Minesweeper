@@ -37,6 +37,10 @@ enum class GameState
     EXIT
 };
 
+ 
+// The main orchestrator of the game. This class owns all the major managers
+// and runs the main game loop, delegating tasks for initialization,
+// updates, and rendering based on the current game state.
 class GameLoop {
 private:
     static GameState current_state;
@@ -56,6 +60,8 @@ public:
     GameLoop();
     ~GameLoop();
 
+    // Main entry point for the game.
     void run();
+    // Static method to allow any part of the game to change the global state.
     static void setGameState(GameState state_to_set);
 };
